@@ -208,7 +208,7 @@ const loadData = async () => {
   } catch {
     // 演示回退
     const demo: DeptItem[] = [
-      { id: 1001, parentId: 0, deptCode: 'CORP', deptName: '盛泰智慧协同集团总部', leader: '王董事长', phone: '010-88880001', sortOrder: 1, status: 1 },
+      { id: 1001, parentId: 0, deptCode: 'CORP', deptName: '云枢协同集团总部', leader: '王董事长', phone: '010-88880001', sortOrder: 1, status: 1 },
       { id: 1002, parentId: 1001, deptCode: 'DEV', deptName: '技术研发中心', leader: '李总工', phone: '010-88880002', sortOrder: 1, status: 1 },
       { id: 1003, parentId: 1001, deptCode: 'HR', deptName: '人力行政中心', leader: '张总监', phone: '010-88880003', sortOrder: 2, status: 1 },
       { id: 1004, parentId: 1001, deptCode: 'MKT', deptName: '市场营销中心', leader: '赵总监', phone: '010-88880004', sortOrder: 3, status: 1 }

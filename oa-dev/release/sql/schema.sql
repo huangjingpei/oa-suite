@@ -489,7 +489,7 @@ CREATE TABLE `oa_adm_seal_apply` (
 DROP TABLE IF EXISTS `oa_adm_redhead_doc`;
 CREATE TABLE `oa_adm_redhead_doc` (
   `id` BIGINT UNSIGNED NOT NULL COMMENT '公文ID',
-  `doc_no` VARCHAR(100) NOT NULL COMMENT '发文字号 (如 盛泰发〔2026〕01号)',
+  `doc_no` VARCHAR(100) NOT NULL COMMENT '发文字号 (如 云枢发〔2026〕01号)',
   `title` VARCHAR(255) NOT NULL COMMENT '公文标题',
   `doc_type` VARCHAR(32) NOT NULL COMMENT '公文类型 (DECISION决议, NOTICE通知, CIRCULAR通报, ORDER命令)',
   `security_level` VARCHAR(32) DEFAULT 'NORMAL' COMMENT '密级 (NORMAL普件, SECRET秘密, CONFIDENTIAL机密)',

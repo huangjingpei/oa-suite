@@ -1,7 +1,7 @@
 <template>
   <div class="print-document">
     <div class="doc-header">
-      <h1 class="company-name">盛泰智慧协同科技有限公司</h1>
+      <h1 class="company-name">云枢智慧协同科技有限公司</h1>
       <h2 class="doc-title">员 工 外 出 公 干 审 批 凭 证</h2>
     </div>
 

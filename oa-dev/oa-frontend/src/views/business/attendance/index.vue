@@ -466,7 +466,7 @@ const handleClock = async (type: 'ON' | 'OFF') => {
     const res = await clockInApi({
       clockType: type,
       deviceType: 'WEB',
-      locationAddress: '北京市海淀区盛泰大厦A座 (浏览器客户端)'
+      locationAddress: '北京市海淀区云枢协同大厦A座 (浏览器客户端)'
     });
     if (res.code === 200) {
       message.success(type === 'ON' ? '上班签到成功！' : '下班签退成功！');

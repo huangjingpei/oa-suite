@@ -33,7 +33,7 @@
           startOffset="50%"
           text-anchor="middle"
         >
-          {{ companyName || '盛泰智慧协同科技有限公司' }}
+          {{ companyName || '云枢智慧协同科技有限公司' }}
         </textPath>
       </text>
 
@@ -84,7 +84,7 @@ withDefaults(
     size?: number;
   }>(),
   {
-    companyName: '盛泰智慧协同科技有限公司',
+    companyName: '云枢智慧协同科技有限公司',
     stampText: '审批专用章',
     color: '#d32f2f',
     size: 140

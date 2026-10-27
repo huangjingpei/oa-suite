@@ -2,12 +2,12 @@
   <div class="redhead-document">
     <!-- 1. 红头顶部企业名称 -->
     <div class="redhead-banner">
-      盛泰智慧协同集团有限公司文件
+      云枢智慧协同科技有限公司文件
     </div>
 
     <!-- 2. 文号与签发信息条 -->
     <div class="redhead-meta-row">
-      <div class="doc-code">{{ doc.docNo || '盛泰发〔2026〕18号' }}</div>
+      <div class="doc-code">{{ doc.docNo || '云枢发〔2026〕18号' }}</div>
       <div class="security-level">
         <span v-if="doc.securityLevel === 'CONFIDENTIAL'">★ 机 密</span>
         <span v-else-if="doc.securityLevel === 'SECRET'">★ 秘 密</span>
@@ -52,13 +52,13 @@
     <!-- 8. 发文机关署名与成文日期 (落款区与盖章) -->
     <div class="signature-section">
       <div class="signature-wrapper">
-        <div class="issuer-name">{{ doc.issuerDept || '盛泰智慧协同集团有限公司' }}</div>
+        <div class="issuer-name">{{ doc.issuerDept || '云枢智慧协同科技有限公司' }}</div>
         <div class="publish-date">{{ formatChineseDate(doc.publishDate || doc.createTime) }}</div>
 
         <!-- 正规加盖企业公文红印章 (覆盖部分文字与日期) -->
         <div class="redhead-stamp">
           <ElectronicStamp
-            company-name="盛泰智慧协同集团有限公司"
+            company-name="云枢智慧协同科技有限公司"
             stamp-text="发文专用章"
             :date="doc.publishDate ? doc.publishDate.substring(0, 10) : '2026-10-28'"
             :size="150"
@@ -76,7 +76,7 @@
       </div>
       <div class="record-divider"></div>
       <div class="record-row record-footer">
-        <span>盛泰智慧协同集团总裁办公室</span>
+        <span>云枢协同总裁办公室</span>
         <span>{{ doc.publishDate || '2026-10-28' }} 印发</span>
         <span>共印 35 份</span>
       </div>

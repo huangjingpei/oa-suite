@@ -3,7 +3,7 @@
     <div class="login-card">
       <div class="login-header">
         <div class="logo-circle">🏢</div>
-        <h2>盛泰 OA 协同办公平台</h2>
+        <h2>云枢 OA 协同平台</h2>
         <p class="subtitle">新一代企业数字化协同与工作流中枢</p>
       </div>
 

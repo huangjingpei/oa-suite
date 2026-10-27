@@ -18,7 +18,7 @@ public class RedheadDocDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotBlank(message = "发文字号不能为空")
-    @Schema(description = "发文字号", example = "盛泰发〔2026〕01号", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "发文字号", example = "云枢发〔2026〕01号", requiredMode = Schema.RequiredMode.REQUIRED)
     private String docNo;
 
     @NotBlank(message = "公文标题不能为空")

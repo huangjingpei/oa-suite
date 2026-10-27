@@ -8,7 +8,7 @@
         </a-avatar>
         <div class="user-meta">
           <div class="user-name">{{ userStore.displayName }}</div>
-          <div class="user-role">{{ userStore.userInfo?.deptName || '盛泰科技' }} · {{ userStore.userInfo?.postName || '员工' }}</div>
+          <div class="user-role">{{ userStore.userInfo?.deptName || '云枢协同' }} · {{ userStore.userInfo?.postName || '员工' }}</div>
         </div>
       </div>
       <div class="welcome-badge">

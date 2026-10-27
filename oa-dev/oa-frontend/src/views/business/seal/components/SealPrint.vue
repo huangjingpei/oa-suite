@@ -1,7 +1,7 @@
 <template>
   <div class="print-document">
     <div class="doc-header">
-      <h1 class="company-name">盛泰智慧协同科技有限公司</h1>
+      <h1 class="company-name">云枢智慧协同科技有限公司</h1>
       <h2 class="doc-title">企 业 印 章 使 用 审 批 签 报 表</h2>
     </div>
 
@@ -97,7 +97,7 @@
             </div>
             <div v-if="seal.procStatus === 2" class="stamp-position">
               <ElectronicStamp
-                company-name="盛泰智慧协同科技有限公司"
+                company-name="云枢智慧协同科技有限公司"
                 :stamp-text="seal.sealType === 'CONTRACT' ? '合同专用章' : '企业公章'"
                 :date="seal.createTime ? seal.createTime.substring(0, 10) : '2026-10-28'"
                 :size="140"

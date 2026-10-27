@@ -2,7 +2,7 @@
   <div class="print-document">
     <!-- 单据大标题 -->
     <div class="doc-header">
-      <h1 class="company-name">盛泰智慧协同科技有限公司</h1>
+      <h1 class="company-name">云枢智慧协同科技有限公司</h1>
       <h2 class="doc-title">员 工 请 假 审 批 单</h2>
     </div>
 
@@ -97,7 +97,7 @@
             <!-- 加盖电子印章 -->
             <div v-if="leave.procStatus === 2" class="stamp-position">
               <ElectronicStamp
-                company-name="盛泰智慧协同科技有限公司"
+                company-name="云枢智慧协同科技有限公司"
                 stamp-text="人力资源审批专用章"
                 :date="leave.createTime ? leave.createTime.substring(0, 10) : '2026-10-28'"
                 :size="130"

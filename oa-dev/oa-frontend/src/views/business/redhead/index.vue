@@ -164,11 +164,11 @@ const loadData = async () => {
     list.value = [
       {
         id: 4,
-        docNo: '盛泰发〔2026〕18号',
+        docNo: '云枢发〔2026〕18号',
         title: '关于印发 2026 年度科技创新与协同办公数字化转型实施纲要的通知',
         docType: 'NOTICE',
         securityLevel: 'NORMAL',
-        issuerDept: '盛泰智慧协同集团有限公司',
+        issuerDept: '云枢智慧协同科技有限公司',
         drafterName: '行政部',
         signerName: '王董事长',
         targetZone: '集团各中心、各部门、直属分公司',

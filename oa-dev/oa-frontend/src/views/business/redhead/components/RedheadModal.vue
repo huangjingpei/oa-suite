@@ -15,7 +15,7 @@
       <a-row :gutter="16">
         <a-col :span="12">
           <a-form-item label="发文字号" name="docNo">
-            <a-input v-model:value="formData.docNo" placeholder="例如：盛泰发〔2026〕05号" />
+            <a-input v-model:value="formData.docNo" placeholder="例如：云枢发〔2026〕05号" />
           </a-form-item>
         </a-col>
         <a-col :span="6">
@@ -129,7 +129,7 @@ const formData = reactive<{
   signerName: string;
   content: string;
 }>({
-  docNo: '盛泰发〔2026〕' + Math.floor(Math.random() * 89 + 10) + '号',
+  docNo: '云枢发〔2026〕' + Math.floor(Math.random() * 89 + 10) + '号',
   title: '',
   docType: 'NOTICE',
   securityLevel: 'NORMAL',

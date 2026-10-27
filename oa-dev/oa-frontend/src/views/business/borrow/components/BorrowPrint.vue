@@ -1,7 +1,7 @@
 <template>
   <div class="print-document">
     <div class="doc-header">
-      <h1 class="company-name">盛泰智慧协同科技有限公司</h1>
+      <h1 class="company-name">云枢智慧协同科技有限公司</h1>
       <h2 class="doc-title">档 案 资 料 借 阅 审 批 单</h2>
     </div>
 
@@ -79,7 +79,7 @@
             </div>
             <div v-if="borrow.procStatus === 2" class="stamp-position">
               <ElectronicStamp
-                company-name="盛泰智慧协同科技有限公司"
+                company-name="云枢智慧协同科技有限公司"
                 stamp-text="档案管理专用章"
                 :date="borrow.createTime ? borrow.createTime.substring(0, 10) : '2026-10-28'"
                 :size="130"
