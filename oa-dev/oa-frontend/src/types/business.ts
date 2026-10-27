@@ -295,3 +295,58 @@ export interface SalaryVO {
   remark?: string;
   createTime: string;
 }
+
+// ==================== 9. 公文通告与已读追踪 (Collab Notice & Read Tracking) ====================
+
+export interface NoticeSaveDTO {
+  id?: number;
+  title: string;
+  category?: string;
+  priority?: string;
+  content: string;
+  targetScope?: string;
+  targetDepts?: string;
+  targetUsers?: string;
+  files?: string;
+  status?: number;
+}
+
+export interface NoticeVO {
+  id: number;
+  title: string;
+  category: string;
+  priority: string;
+  content: string;
+  targetScope: string;
+  targetDepts?: string;
+  targetUsers?: string;
+  files?: string;
+  status: number;
+  publisherUsername: string;
+  publisherName: string;
+  publishTime?: string;
+  isRead: boolean;
+  readCount: number;
+  totalCount: number;
+  readRate: number;
+  createTime: string;
+}
+
+export interface UserReadItem {
+  userId: number;
+  username: string;
+  realName: string;
+  deptName?: string;
+  readTime?: string;
+}
+
+export interface NoticeReadStatsVO {
+  noticeId: number;
+  title: string;
+  totalUsers: number;
+  readCount: number;
+  unreadCount: number;
+  readRate: number;
+  readUsers: UserReadItem[];
+  unreadUsers: UserReadItem[];
+}

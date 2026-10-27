@@ -18,7 +18,10 @@ import type {
   EgressApplyDTO,
   EgressVO,
   SalaryVerifyDTO,
-  SalaryVO
+  SalaryVO,
+  NoticeSaveDTO,
+  NoticeVO,
+  NoticeReadStatsVO
 } from '@/types/business';
 
 // ==================== 1. 请假业务 (HR Leave) ====================
@@ -153,4 +156,30 @@ export function getSalaryDetailApi(id: number) {
 
 export function confirmSalaryApi(id: number) {
   return request.put<any, R<boolean>>(`/hr/salary/confirm/${id}`);
+}
+
+// ==================== 10. 公文通告与已读追踪 (Collab Notice & Read Tracking) ====================
+
+export function pageNoticesApi(params: { keyword?: string; category?: string; pageNum?: number; pageSize?: number }) {
+  return request.get<any, R<PageResult<NoticeVO>>>('/collab/notice/page', { params });
+}
+
+export function getNoticeDetailApi(id: number) {
+  return request.get<any, R<NoticeVO>>(`/collab/notice/detail/${id}`);
+}
+
+export function getNoticeReadStatsApi(id: number) {
+  return request.get<any, R<NoticeReadStatsVO>>(`/collab/notice/read-stats/${id}`);
+}
+
+export function saveNoticeApi(data: NoticeSaveDTO) {
+  return request.post<any, R<number>>('/collab/notice', data);
+}
+
+export function deleteNoticeApi(id: number) {
+  return request.delete<any, R<boolean>>(`/collab/notice/${id}`);
+}
+
+export function remindUnreadUsersApi(id: number) {
+  return request.post<any, R<string>>(`/collab/notice/remind/${id}`);
 }

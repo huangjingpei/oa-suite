@@ -249,27 +249,82 @@
         <!-- 红头公文与协同通知 -->
         <a-tab-pane key="notices">
           <template #tab>
-            <span><FileTextOutlined /> 公文公告</span>
+            <span>
+              <FileTextOutlined /> 公文公告
+              <a-badge v-if="unreadNoticeBadge > 0" :count="unreadNoticeBadge" :offset="[10, -2]" />
+            </span>
           </template>
-          <a-list item-layout="horizontal" :data-source="mockNotices">
+          <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center">
+            <span style="color: #8c8c8c; font-size: 13px">实时同步集团红头文件、规章决议与部门通告</span>
+            <a-button type="link" size="small" @click="router.push('/business/notice')">
+              进入通告中心与阅读追踪大厅 &gt;
+            </a-button>
+          </div>
+          <a-list item-layout="horizontal" :data-source="dashboardNotices" :loading="noticeLoading">
             <template #renderItem="{ item }">
               <a-list-item>
-                <a-list-item-meta :description="item.time">
+                <a-list-item-meta>
                   <template #title>
-                    <a-tag color="red">{{ item.tag }}</a-tag>
-                    <a href="javascript:;" style="font-weight: 500">{{ item.title }}</a>
+                    <div style="display: flex; align-items: center; gap: 8px">
+                      <a-badge v-if="!item.isRead" status="error" title="当前未读" />
+                      <a-tag :color="getCategoryColor(item.category)">{{ item.category || '通告' }}</a-tag>
+                      <a
+                        href="javascript:;"
+                        :style="{ fontWeight: item.isRead ? 'normal' : 'bold', color: item.isRead ? '#262626' : '#1677ff' }"
+                        @click="handleViewDashboardNotice(item)"
+                      >
+                        {{ item.title }}
+                      </a>
+                      <a-tag v-if="item.priority === 'H'" color="red">加急</a-tag>
+                    </div>
+                  </template>
+                  <template #description>
+                    <div style="color: #8c8c8c; font-size: 12px; margin-top: 4px">
+                      发布人员：{{ item.publisherName }} &nbsp;|&nbsp; 发布时间：{{ item.publishTime || item.createTime }}
+                    </div>
                   </template>
                   <template #avatar>
                     <a-avatar style="background-color: #f5222d">公</a-avatar>
                   </template>
                 </a-list-item-meta>
-                <div>发布单位：{{ item.issuer }}</div>
+                <div style="text-align: right">
+                  <a-tag color="blue">全员查阅率 {{ item.readRate || 0 }}%</a-tag>
+                  <a-button type="link" size="small" @click="handleViewDashboardNotice(item)">阅读公文</a-button>
+                </div>
               </a-list-item>
             </template>
           </a-list>
         </a-tab-pane>
       </a-tabs>
     </a-card>
+
+    <!-- 公告阅读详情弹窗 -->
+    <a-modal
+      v-model:open="dashboardNoticeDetailVisible"
+      :title="dashboardCurrentNotice?.title || '公文通告详情'"
+      :footer="null"
+      width="720px"
+    >
+      <div v-if="dashboardCurrentNotice" style="padding: 10px 0">
+        <div style="display: flex; gap: 16px; font-size: 13px; color: #8c8c8c; margin-bottom: 16px">
+          <span><strong>分类：</strong>{{ dashboardCurrentNotice.category }}</span>
+          <span><strong>发布人：</strong>{{ dashboardCurrentNotice.publisherName }}</span>
+          <span><strong>发布时间：</strong>{{ dashboardCurrentNotice.publishTime || dashboardCurrentNotice.createTime }}</span>
+          <span><strong>阅读率：</strong>{{ dashboardCurrentNotice.readCount }} / {{ dashboardCurrentNotice.totalCount }} 人 ({{ dashboardCurrentNotice.readRate }}%)</span>
+        </div>
+        <div style="background: #fafafa; border: 1px solid #f0f0f0; border-radius: 6px; padding: 20px; font-size: 14px; line-height: 1.8; white-space: pre-wrap">
+          {{ dashboardCurrentNotice.content }}
+        </div>
+        <div style="text-align: right; margin-top: 20px">
+          <a-space>
+            <a-button type="default" @click="dashboardNoticeDetailVisible = false">关闭</a-button>
+            <a-button type="primary" @click="router.push('/business/notice')">
+              前往追踪全员查阅状态
+            </a-button>
+          </a-space>
+        </div>
+      </div>
+    </a-modal>
 
     <!-- 审批流转弹窗 -->
     <ApprovalModal
@@ -300,7 +355,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/user';
 import { message } from 'ant-design-vue';
 import {
@@ -320,7 +376,9 @@ import {
   getMySubmittedApi,
   cancelProcessApi
 } from '@/api/workflow';
+import { pageNoticesApi, getNoticeDetailApi } from '@/api/business';
 import type { TaskVO } from '@/types/workflow';
+import type { NoticeVO } from '@/types/business';
 import ApprovalModal from '@/views/workflow/components/ApprovalModal.vue';
 import TimelineHistory from '@/views/workflow/components/TimelineHistory.vue';
 import LeaveModal from '@/views/business/leave/components/LeaveModal.vue';
@@ -331,6 +389,7 @@ import SealModal from '@/views/business/seal/components/SealModal.vue';
 import RedheadModal from '@/views/business/redhead/components/RedheadModal.vue';
 import BorrowModal from '@/views/business/borrow/components/BorrowModal.vue';
 
+const router = useRouter();
 const userStore = useUserStore();
 
 // 快捷表单弹窗状态
@@ -403,26 +462,45 @@ const submittedColumns = [
   { title: '操作', key: 'action', width: 160, align: 'center' as const }
 ];
 
-const mockNotices = ref([
-  {
-    tag: '红头决议',
-    title: '盛泰发〔2026〕01号 关于全面启动新一代数字化协同办公系统升级的通知',
-    issuer: '集团总经办',
-    time: '2026-10-27 10:00:00'
-  },
-  {
-    tag: '行政通报',
-    title: '关于进一步加强企业公章及合同专用章用印审批合规管理的通知',
-    issuer: '综合行政部',
-    time: '2026-10-26 15:30:00'
-  },
-  {
-    tag: '人事考勤',
-    title: '关于2026年度10月份员工日常打卡异常漏卡补卡提交流程规范',
-    issuer: '人力资源部',
-    time: '2026-10-25 09:00:00'
+// 公文通告实时数据
+const dashboardNotices = ref<NoticeVO[]>([]);
+const noticeLoading = ref(false);
+const unreadNoticeBadge = computed(() => dashboardNotices.value.filter(n => !n.isRead).length);
+const dashboardNoticeDetailVisible = ref(false);
+const dashboardCurrentNotice = ref<NoticeVO | null>(null);
+
+const getCategoryColor = (cat?: string) => {
+  switch (cat) {
+    case '通报': return 'red';
+    case '决议': return 'purple';
+    case '公告': return 'orange';
+    case '通知':
+    default:
+      return 'blue';
   }
-]);
+};
+
+const loadNotices = async () => {
+  noticeLoading.value = true;
+  try {
+    const res = await pageNoticesApi({ pageNum: 1, pageSize: 6 });
+    dashboardNotices.value = res.data.records || [];
+  } catch (ignored) {
+  } finally {
+    noticeLoading.value = false;
+  }
+};
+
+const handleViewDashboardNotice = async (notice: NoticeVO) => {
+  try {
+    const res = await getNoticeDetailApi(notice.id);
+    dashboardCurrentNotice.value = res.data;
+    dashboardNoticeDetailVisible.value = true;
+    notice.isRead = true;
+  } catch (err: any) {
+    message.error(err.message || '获取通告详情失败');
+  }
+};
 
 // 加载待办任务
 const loadPendingTasks = async () => {
@@ -467,6 +545,7 @@ const handleTabChange = (key: string) => {
   if (key === 'pending') loadPendingTasks();
   else if (key === 'handled') loadHandledTasks();
   else if (key === 'submitted') loadMySubmitted();
+  else if (key === 'notices') loadNotices();
 };
 
 const openApproval = (task: TaskVO) => {
@@ -501,6 +580,7 @@ onMounted(() => {
   loadPendingTasks();
   loadHandledTasks();
   loadMySubmitted();
+  loadNotices();
 });
 </script>
 

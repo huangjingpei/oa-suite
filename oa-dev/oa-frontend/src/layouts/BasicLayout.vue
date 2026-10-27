@@ -196,7 +196,8 @@ import {
   UserOutlined,
   KeyOutlined,
   ContactsOutlined,
-  DollarOutlined
+  DollarOutlined,
+  NotificationOutlined
 } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { updatePasswordApi, updateProfileApi } from '@/api/auth';
@@ -245,6 +246,11 @@ const menuItems = ref([
     label: '我的月度工资条'
   },
   {
+    key: 'notice',
+    icon: () => h(NotificationOutlined),
+    label: '公文通告与追踪'
+  },
+  {
     key: 'system',
     icon: () => h(SettingOutlined),
     label: '组织与系统管理',
@@ -287,6 +293,7 @@ watch(
     else if (path.includes('business/redhead')) selectedKeys.value = ['redhead'];
     else if (path.includes('business/borrow')) selectedKeys.value = ['borrow'];
     else if (path.includes('business/salary')) selectedKeys.value = ['salary'];
+    else if (path.includes('business/notice')) selectedKeys.value = ['notice'];
     else if (path.includes('system/address')) selectedKeys.value = ['address'];
     else if (path.includes('system/dept')) selectedKeys.value = ['dept'];
     else if (path.includes('system/user')) selectedKeys.value = ['user'];
@@ -312,6 +319,8 @@ const handleMenuClick = ({ key }: { key: string }) => {
     router.push('/business/borrow');
   } else if (key === 'salary') {
     router.push('/business/salary');
+  } else if (key === 'notice') {
+    router.push('/business/notice');
   } else if (key === 'address') {
     router.push('/system/address');
   } else if (key === 'dept') {

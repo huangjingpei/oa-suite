@@ -569,7 +569,23 @@ CREATE TABLE `oa_collab_notice` (
   KEY `idx_notice_type` (`notice_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='企业协同通知与公告表';
 
--- 5.2 业务流转过程评论与讨论留言表 (替代 bs_comments)
+-- 5.2 通告与公文已读/未读状态追踪表 (替代 sys_announcement_send)
+DROP TABLE IF EXISTS `oa_collab_notice_read`;
+CREATE TABLE `oa_collab_notice_read` (
+  `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
+  `notice_id` BIGINT UNSIGNED NOT NULL COMMENT '通告/公文ID',
+  `user_id` BIGINT UNSIGNED NOT NULL COMMENT '员工用户ID',
+  `username` VARCHAR(64) NOT NULL COMMENT '员工账号/工号',
+  `real_name` VARCHAR(64) NOT NULL COMMENT '员工姓名',
+  `read_status` TINYINT NOT NULL DEFAULT 1 COMMENT '已读状态 (1已读, 0未读)',
+  `read_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '首次查阅时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_notice_user` (`notice_id`, `username`),
+  KEY `idx_notice_id` (`notice_id`),
+  KEY `idx_username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='通告与公文阅读状态追踪表';
+
+-- 5.3 业务流转过程评论与讨论留言表 (替代 bs_comments)
 DROP TABLE IF EXISTS `oa_collab_comment`;
 CREATE TABLE `oa_collab_comment` (
   `id` BIGINT UNSIGNED NOT NULL COMMENT '留言ID',

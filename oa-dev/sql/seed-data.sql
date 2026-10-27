@@ -204,7 +204,15 @@ INSERT INTO `oa_wf_definition` (`id`, `proc_key`, `proc_name`, `business_table`,
 -- ------------------------------------------------------------------------------
 DELETE FROM `oa_collab_notice`;
 INSERT INTO `oa_collab_notice` (`id`, `title`, `notice_type`, `content`, `is_top`, `status`, `publisher_name`, `publish_time`, `view_count`, `create_by`) VALUES
-(7001, '关于新一代企业协同OA平台正式启动升级改造的通知', 'NOTICE', '<p>各位同仁：</p><p>为全面提升企业办公效能与移动审批体验，公司正式启动新一代数字化协同办公系统（OA-Suite Modernization）的研发与升级工作。系统采用现代企业级架构全面重构，支持动态加签、会签、多端打卡与高保真打印单据等核心能力。敬请期待！</p>', 1, 1, '总经办', NOW(), 128, 'system');
+(7001, '关于新一代企业协同OA平台正式启动升级改造的通知', 'NOTICE', '<p>各位同仁：</p><p>为全面提升企业办公效能与移动审批体验，公司正式启动新一代数字化协同办公系统（OA-Suite Modernization）的研发与升级工作。系统采用现代企业级架构全面重构，支持动态加签、会签、多端打卡与高保真打印单据等核心能力。敬请期待！</p>', 1, 1, '总经办', NOW(), 128, 'system'),
+(7002, '关于2026年第四季度全员信息网络与数据安全合规培训的通知', 'SAFETY', '<p>全体员工：</p><p>为贯彻落实国家网络安全与个人信息保护法要求，公司将于本周五下午召开《企业数据资产安全与防钓鱼邮件合规实操》专题全员培训会，请各部门全员准时在线参会并完成签到。</p>', 0, 1, '信息技术部', NOW(), 86, 'system');
+
+DELETE FROM `oa_collab_notice_read`;
+INSERT INTO `oa_collab_notice_read` (`id`, `notice_id`, `user_id`, `username`, `real_name`, `read_status`, `read_time`) VALUES
+(7101, 7001, 1001, 'admin', '系统管理员', 1, NOW()),
+(7102, 7001, 1002, 'zhangsan', '张三', 1, NOW()),
+(7103, 7001, 1003, 'lisi', '李四', 1, NOW()),
+(7104, 7002, 1001, 'admin', '系统管理员', 1, NOW());
 
 -- ------------------------------------------------------------------------------
 -- 8. 员工月度工资条初始化演示数据

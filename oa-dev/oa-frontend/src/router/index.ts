@@ -58,6 +58,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/business/salary/index.vue'),
         meta: { title: '月度工资条安全中心' }
       },
+      {
+        path: 'business/notice',
+        name: 'NoticeManagement',
+        component: () => import('@/views/business/notice/index.vue'),
+        meta: { title: '公文通告与阅读追踪' }
+      },
       // 系统组织管理
       {
         path: 'system/address',
