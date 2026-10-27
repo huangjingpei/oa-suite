@@ -33,16 +33,16 @@ INSERT INTO `oa_sys_role` (`id`, `role_code`, `role_name`, `description`, `sort_
 
 -- ------------------------------------------------------------------------------
 -- 3. 系统初始用户数据
--- 默认密码均为: 123456 (BCrypt哈希: $2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2)
+-- 默认密码均为: 123456 (BCrypt哈希: $2a$10$Rt0wSOsmcllHK7qQRKNLoOIrrF8xYx6b3cEJioWYu.hxL58.eTHmy)
 -- ------------------------------------------------------------------------------
 DELETE FROM `oa_sys_user`;
 INSERT INTO `oa_sys_user` (`id`, `username`, `real_name`, `password`, `salt`, `work_no`, `dept_id`, `post_name`, `email`, `phone`, `gender`, `status`, `create_by`) VALUES
-(3001, 'admin', '系统管理员', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', 'salt123', 'OA0001', 1002, '技术总监/总管', 'admin@graddu.com', '13800000001', 1, 1, 'system'),
-(3002, 'hr_mgr', '李人事', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', 'salt123', 'OA0002', 1003, '人事主管', 'hr@graddu.com', '13800000002', 2, 1, 'system'),
-(3003, 'adm_mgr', '赵行政', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', 'salt123', 'OA0003', 1003, '印章档案专员', 'adm@graddu.com', '13800000003', 2, 1, 'system'),
-(3004, 'dev_mgr', '王主管', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', 'salt123', 'OA0004', 1004, '研发一部经理', 'dev_mgr@graddu.com', '13800000004', 1, 1, 'system'),
-(3005, 'zhangsan', '张三', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', 'salt123', 'OA0101', 1004, 'Java开发工程师', 'zhangsan@graddu.com', '13800000101', 1, 1, 'system'),
-(3006, 'lisi', '李四', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', 'salt123', 'OA0102', 1004, '前端开发工程师', 'lisi@graddu.com', '13800000102', 1, 1, 'system');
+(3001, 'admin', '系统管理员', '$2a$10$Rt0wSOsmcllHK7qQRKNLoOIrrF8xYx6b3cEJioWYu.hxL58.eTHmy', 'salt123', 'OA0001', 1002, '技术总监/总管', 'admin@graddu.com', '13800000001', 1, 1, 'system'),
+(3002, 'hr_mgr', '李人事', '$2a$10$Rt0wSOsmcllHK7qQRKNLoOIrrF8xYx6b3cEJioWYu.hxL58.eTHmy', 'salt123', 'OA0002', 1003, '人事主管', 'hr@graddu.com', '13800000002', 2, 1, 'system'),
+(3003, 'adm_mgr', '赵行政', '$2a$10$Rt0wSOsmcllHK7qQRKNLoOIrrF8xYx6b3cEJioWYu.hxL58.eTHmy', 'salt123', 'OA0003', 1003, '印章档案专员', 'adm@graddu.com', '13800000003', 2, 1, 'system'),
+(3004, 'dev_mgr', '王主管', '$2a$10$Rt0wSOsmcllHK7qQRKNLoOIrrF8xYx6b3cEJioWYu.hxL58.eTHmy', 'salt123', 'OA0004', 1004, '研发一部经理', 'dev_mgr@graddu.com', '13800000004', 1, 1, 'system'),
+(3005, 'zhangsan', '张三', '$2a$10$Rt0wSOsmcllHK7qQRKNLoOIrrF8xYx6b3cEJioWYu.hxL58.eTHmy', 'salt123', 'OA0101', 1004, 'Java开发工程师', 'zhangsan@graddu.com', '13800000101', 1, 1, 'system'),
+(3006, 'lisi', '李四', '$2a$10$Rt0wSOsmcllHK7qQRKNLoOIrrF8xYx6b3cEJioWYu.hxL58.eTHmy', 'salt123', 'OA0102', 1004, '前端开发工程师', 'lisi@graddu.com', '13800000102', 1, 1, 'system');
 
 -- ------------------------------------------------------------------------------
 -- 4. 用户与角色关联初始数据

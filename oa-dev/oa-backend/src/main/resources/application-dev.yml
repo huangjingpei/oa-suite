@@ -1,9 +1,16 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:oa_suite_dev}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:oa_suite_dev}?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
     username: ${DB_USER:root}
-    password: ${DB_PWD:123456}
+    password: ${DB_PWD:89dfu*#$ewr87l}
+  sql:
+    init:
+      mode: always # always: 每次启动均执行 SQL 初始化；初次初始化成功后可改为 never
+      schema-locations: classpath:sql/schema.sql
+      data-locations: classpath:sql/seed-data.sql
+      encoding: UTF-8
+      continue-on-error: true # 遇已存在对象继续执行，防止冲突中断
 
 logging:
   level:
