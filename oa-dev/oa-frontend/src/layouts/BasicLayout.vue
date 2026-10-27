@@ -54,6 +54,13 @@
                   工号：{{ userStore.userInfo?.workNo || 'OA0000' }}
                 </a-menu-item>
                 <a-menu-divider />
+                <a-menu-item key="profile" @click="openProfileModal">
+                  <UserOutlined /> 个人基本资料
+                </a-menu-item>
+                <a-menu-item key="password" @click="openPasswordModal">
+                  <KeyOutlined /> 修改登录密码
+                </a-menu-item>
+                <a-menu-divider />
                 <a-menu-item key="logout" @click="handleLogout">
                   <LogoutOutlined /> 退出登录
                 </a-menu-item>
@@ -67,11 +74,107 @@
         <router-view />
       </a-layout-content>
     </a-layout>
+
+    <!-- 个人基本资料修改弹窗 -->
+    <a-modal
+      v-model:open="profileModalVisible"
+      title="个人基本资料设置"
+      width="520px"
+      :confirm-loading="savingProfile"
+      @ok="handleSaveProfile"
+    >
+      <a-form layout="vertical" style="margin-top: 16px">
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <a-form-item label="登录账号">
+              <a-input :value="userStore.userInfo?.username" disabled />
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item label="员工工号">
+              <a-input :value="userStore.userInfo?.workNo || '未分配'" disabled />
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <a-form-item label="所属部门">
+              <a-input :value="userStore.userInfo?.deptName || '未归属'" disabled />
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item label="岗位职务">
+              <a-input :value="userStore.userInfo?.postName || '标准职级'" disabled />
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-form-item label="真实姓名" required>
+          <a-input v-model:value="profileForm.realName" placeholder="请输入您的真实姓名" />
+        </a-form-item>
+
+        <a-form-item label="联系电话">
+          <a-input v-model:value="profileForm.phone" placeholder="请输入11位手机号码" />
+        </a-form-item>
+
+        <a-form-item label="电子邮箱">
+          <a-input v-model:value="profileForm.email" placeholder="请输入企业邮箱或常用邮箱" />
+        </a-form-item>
+
+        <a-form-item label="性别">
+          <a-radio-group v-model:value="profileForm.gender">
+            <a-radio :value="1">男</a-radio>
+            <a-radio :value="2">女</a-radio>
+            <a-radio :value="0">保密</a-radio>
+          </a-radio-group>
+        </a-form-item>
+      </a-form>
+    </a-modal>
+
+    <!-- 修改个人密码弹窗 -->
+    <a-modal
+      v-model:open="passwordModalVisible"
+      title="修改个人登录密码"
+      width="460px"
+      :confirm-loading="savingPassword"
+      @ok="handleSavePassword"
+    >
+      <a-alert
+        message="安全须知"
+        description="新密码长度需在6-32位之间，请勿与原密码相同；修改成功后请牢记新密码。"
+        type="info"
+        show-icon
+        style="margin-bottom: 16px"
+      />
+      <a-form layout="vertical">
+        <a-form-item label="当前原密码" required>
+          <a-input-password
+            v-model:value="passwordForm.oldPassword"
+            placeholder="请输入当前生效的原登录密码"
+          />
+        </a-form-item>
+
+        <a-form-item label="设置新密码" required>
+          <a-input-password
+            v-model:value="passwordForm.newPassword"
+            placeholder="请输入6-32位的新密码"
+          />
+        </a-form-item>
+
+        <a-form-item label="确认新密码" required>
+          <a-input-password
+            v-model:value="passwordForm.confirmPassword"
+            placeholder="请再次输入新密码"
+          />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </a-layout>
 </template>
 
 <script setup lang="ts">
-import { ref, h, watch } from 'vue';
+import { ref, reactive, h, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/store/user';
 import {
@@ -89,9 +192,12 @@ import {
   SafetyCertificateOutlined,
   BookOutlined,
   MobileOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  UserOutlined,
+  KeyOutlined
 } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+import { updatePasswordApi, updateProfileApi } from '@/api/auth';
 
 const router = useRouter();
 const route = useRoute();
@@ -198,6 +304,91 @@ const handleMenuClick = ({ key }: { key: string }) => {
     router.push('/system/role');
   } else if (key === 'dict') {
     router.push('/system/dict');
+  }
+};
+
+// 个人资料设置
+const profileModalVisible = ref(false);
+const savingProfile = ref(false);
+const profileForm = reactive({
+  realName: '',
+  phone: '',
+  email: '',
+  gender: 1
+});
+
+const openProfileModal = () => {
+  profileForm.realName = userStore.userInfo?.realName || '';
+  profileForm.phone = userStore.userInfo?.phone || '';
+  profileForm.email = userStore.userInfo?.email || '';
+  profileForm.gender = userStore.userInfo?.gender ?? 1;
+  profileModalVisible.value = true;
+};
+
+const handleSaveProfile = async () => {
+  if (!profileForm.realName.trim()) {
+    message.warning('真实姓名不能为空');
+    return;
+  }
+  try {
+    savingProfile.value = true;
+    const res = await updateProfileApi(profileForm);
+    if (res.code === 200) {
+      message.success('个人基本资料已成功更新');
+      await userStore.fetchProfile();
+      profileModalVisible.value = false;
+    }
+  } catch (err: any) {
+    if (err?.message) message.error(err.message);
+  } finally {
+    savingProfile.value = false;
+  }
+};
+
+// 修改密码
+const passwordModalVisible = ref(false);
+const savingPassword = ref(false);
+const passwordForm = reactive({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+});
+
+const openPasswordModal = () => {
+  passwordForm.oldPassword = '';
+  passwordForm.newPassword = '';
+  passwordForm.confirmPassword = '';
+  passwordModalVisible.value = true;
+};
+
+const handleSavePassword = async () => {
+  if (!passwordForm.oldPassword) {
+    message.warning('请输入当前原密码');
+    return;
+  }
+  if (!passwordForm.newPassword || passwordForm.newPassword.length < 6) {
+    message.warning('新密码长度不能少于6位');
+    return;
+  }
+  if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+    message.warning('两次输入的新密码不一致');
+    return;
+  }
+  if (passwordForm.oldPassword === passwordForm.newPassword) {
+    message.warning('新密码不能与当前原密码相同');
+    return;
+  }
+  try {
+    savingPassword.value = true;
+    const res = await updatePasswordApi(passwordForm);
+    if (res.code === 200) {
+      message.success('密码修改成功，请牢记您的新密码');
+      passwordModalVisible.value = false;
+    }
+  } catch (err: any) {
+    if (err?.message) message.error(err.message);
+  } finally {
+    savingPassword.value = false;
   }
 };
 

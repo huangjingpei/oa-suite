@@ -13,3 +13,26 @@ export function logoutApi() {
 export function getProfileApi() {
   return request.get<R<UserVO>>('/auth/profile');
 }
+
+export interface PasswordUpdateDTO {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ProfileUpdateDTO {
+  realName?: string;
+  phone?: string;
+  email?: string;
+  gender?: number;
+  avatar?: string;
+}
+
+export function updatePasswordApi(data: PasswordUpdateDTO) {
+  return request.put<any, R<boolean>>('/auth/password', data);
+}
+
+export function updateProfileApi(data: ProfileUpdateDTO) {
+  return request.put<any, R<boolean>>('/auth/profile', data);
+}
+

@@ -4,6 +4,8 @@ import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import com.graddu.oa.common.api.R;
 import com.graddu.oa.module.system.dto.LoginDTO;
+import com.graddu.oa.module.system.dto.PasswordUpdateDTO;
+import com.graddu.oa.module.system.dto.ProfileUpdateDTO;
 import com.graddu.oa.module.system.service.SysUserService;
 import com.graddu.oa.module.system.vo.LoginVO;
 import com.graddu.oa.module.system.vo.UserVO;
@@ -42,5 +44,19 @@ public class AuthController {
     @Operation(summary = "获取当前登录用户信息")
     public R<UserVO> getProfile() {
         return R.ok(userService.getCurrentUserInfo());
+    }
+
+    @PutMapping("/password")
+    @Operation(summary = "当前登录用户修改个人密码")
+    public R<Boolean> updatePassword(@Valid @RequestBody PasswordUpdateDTO dto) {
+        userService.updatePassword(dto);
+        return R.ok("密码修改成功，请牢记您的新密码", true);
+    }
+
+    @PutMapping("/profile")
+    @Operation(summary = "当前登录用户更新个人基本资料")
+    public R<Boolean> updateProfile(@Valid @RequestBody ProfileUpdateDTO dto) {
+        userService.updateProfile(dto);
+        return R.ok("个人资料更新成功", true);
     }
 }

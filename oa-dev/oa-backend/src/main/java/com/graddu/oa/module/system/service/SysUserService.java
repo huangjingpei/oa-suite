@@ -3,6 +3,8 @@ package com.graddu.oa.module.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.graddu.oa.common.api.PageResult;
 import com.graddu.oa.module.system.dto.LoginDTO;
+import com.graddu.oa.module.system.dto.PasswordUpdateDTO;
+import com.graddu.oa.module.system.dto.ProfileUpdateDTO;
 import com.graddu.oa.module.system.dto.UserCreateDTO;
 import com.graddu.oa.module.system.dto.UserUpdateDTO;
 import com.graddu.oa.module.system.entity.SysUser;
@@ -16,6 +18,10 @@ public interface SysUserService extends IService<SysUser> {
     LoginVO login(LoginDTO loginDTO);
 
     UserVO getCurrentUserInfo();
+
+    void updatePassword(PasswordUpdateDTO dto);
+
+    void updateProfile(ProfileUpdateDTO dto);
 
     List<UserVO> listAllUsers();
 

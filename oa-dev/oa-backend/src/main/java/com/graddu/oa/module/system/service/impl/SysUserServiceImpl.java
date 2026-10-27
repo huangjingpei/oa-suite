@@ -10,6 +10,8 @@ import com.graddu.oa.common.api.PageResult;
 import com.graddu.oa.common.api.ResultCode;
 import com.graddu.oa.common.exception.BusinessException;
 import com.graddu.oa.module.system.dto.LoginDTO;
+import com.graddu.oa.module.system.dto.PasswordUpdateDTO;
+import com.graddu.oa.module.system.dto.ProfileUpdateDTO;
 import com.graddu.oa.module.system.dto.UserCreateDTO;
 import com.graddu.oa.module.system.dto.UserUpdateDTO;
 import com.graddu.oa.module.system.entity.SysDept;
@@ -27,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -107,6 +110,59 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         fillUserRoles(vo, user.getId());
         vo.setPermissions(stpInterface.getPermissionList(user.getUsername(), StpUtil.getLoginType()));
         return vo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePassword(PasswordUpdateDTO dto) {
+        String username = StpUtil.getLoginIdAsString();
+        SysUser user = getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, username));
+        if (user == null) {
+            throw new BusinessException(ResultCode.USER_NOT_FOUND);
+        }
+
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            throw new BusinessException("两次输入的新密码不一致，请重新输入");
+        }
+
+        if (dto.getOldPassword().equals(dto.getNewPassword())) {
+            throw new BusinessException("新密码不能与当前原密码相同");
+        }
+
+        if (!BCrypt.checkpw(dto.getOldPassword(), user.getPassword())) {
+            throw new BusinessException("原密码校验失败，请输入正确的当前登录密码");
+        }
+
+        String hashedNewPassword = BCrypt.hashpw(dto.getNewPassword(), BCrypt.gensalt());
+        user.setPassword(hashedNewPassword);
+        updateById(user);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateProfile(ProfileUpdateDTO dto) {
+        String username = StpUtil.getLoginIdAsString();
+        SysUser user = getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, username));
+        if (user == null) {
+            throw new BusinessException(ResultCode.USER_NOT_FOUND);
+        }
+
+        if (StringUtils.hasText(dto.getRealName())) {
+            user.setRealName(dto.getRealName().trim());
+        }
+        if (dto.getPhone() != null) {
+            user.setPhone(dto.getPhone().trim());
+        }
+        if (dto.getEmail() != null) {
+            user.setEmail(dto.getEmail().trim());
+        }
+        if (dto.getGender() != null) {
+            user.setGender(dto.getGender());
+        }
+        if (dto.getAvatar() != null) {
+            user.setAvatar(dto.getAvatar().trim());
+        }
+        updateById(user);
     }
 
     @Override
