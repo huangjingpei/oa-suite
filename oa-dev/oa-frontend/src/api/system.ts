@@ -206,3 +206,46 @@ export function assignRolePermissionsApi(data: RolePermissionAssignDTO) {
   return request.post<any, R<boolean>>('/sys/permission/assign', data);
 }
 
+// ==================== 6. 企微/钉钉/飞书 提醒机器人配置 (Notify Robot) ====================
+
+export interface NotifyConfigDTO {
+  id?: number;
+  platform: 'WECHAT_WORK' | 'DINGTALK' | 'FEISHU' | 'CUSTOM';
+  name: string;
+  webhookUrl: string;
+  secretKey?: string;
+  status?: number;
+  notifyEvents?: string;
+  remark?: string;
+}
+
+export interface NotifyConfigVO {
+  id: number;
+  platform: 'WECHAT_WORK' | 'DINGTALK' | 'FEISHU' | 'CUSTOM';
+  name: string;
+  webhookUrl: string;
+  secretKey?: string;
+  status: number;
+  notifyEvents: string;
+  remark?: string;
+  createTime?: string;
+  updateTime?: string;
+}
+
+export function listNotifyConfigsApi() {
+  return request.get<any, R<NotifyConfigVO[]>>('/sys/notify-config/list');
+}
+
+export function saveNotifyConfigApi(data: NotifyConfigDTO) {
+  return request.post<any, R<number>>('/sys/notify-config/save', data);
+}
+
+export function deleteNotifyConfigApi(id: number) {
+  return request.delete<any, R<boolean>>(`/sys/notify-config/${id}`);
+}
+
+export function sendTestNotifyMessageApi(id: number) {
+  return request.post<any, R<string>>(`/sys/notify-config/test/${id}`);
+}
+
+

@@ -602,4 +602,22 @@ CREATE TABLE `oa_collab_comment` (
   KEY `idx_inst_id` (`inst_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='业务与流程协同沟通留言表';
 
+-- ------------------------------------------------------------------------------
+-- 6. 企微/钉钉/飞书 待办审批提醒机器人配置表 (oa_sys_notify_config)
+-- ------------------------------------------------------------------------------
+DROP TABLE IF EXISTS `oa_sys_notify_config`;
+CREATE TABLE `oa_sys_notify_config` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `platform` VARCHAR(32) NOT NULL COMMENT '平台类型 (WECHAT_WORK企业微信, DINGTALK钉钉, FEISHU飞书, CUSTOM自定义)',
+  `name` VARCHAR(64) NOT NULL COMMENT '机器人名称 (如 集团审批中心企微提醒群)',
+  `webhook_url` VARCHAR(512) NOT NULL COMMENT 'Webhook URL 地址',
+  `secret_key` VARCHAR(256) DEFAULT NULL COMMENT '安全签名密钥(钉钉/飞书加签)',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '启用状态 (1启用, 0禁用)',
+  `notify_events` VARCHAR(255) DEFAULT 'TASK_ASSIGNED,PROCESS_FINISHED,NOTICE_PUBLISHED' COMMENT '订阅事件(TASK_ASSIGNED待办到达, PROCESS_FINISHED办结通知, NOTICE_PUBLISHED公文发布)',
+  `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注说明',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='企微/钉钉/飞书机器人消息推送配置表';
+
 SET FOREIGN_KEY_CHECKS = 1;

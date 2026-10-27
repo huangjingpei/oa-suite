@@ -18,6 +18,7 @@ import com.graddu.oa.module.system.entity.SysDept;
 import com.graddu.oa.module.system.entity.SysUser;
 import com.graddu.oa.module.system.mapper.SysDeptMapper;
 import com.graddu.oa.module.system.mapper.SysUserMapper;
+import com.graddu.oa.module.system.service.SysNotifyConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -37,6 +38,7 @@ public class CollabNoticeServiceImpl extends ServiceImpl<CollabNoticeMapper, Col
     private final CollabNoticeReadMapper noticeReadMapper;
     private final SysUserMapper userMapper;
     private final SysDeptMapper deptMapper;
+    private final SysNotifyConfigService notifyConfigService;
 
     @Override
     public PageResult<NoticeVO> pageNotices(Integer pageNum, Integer pageSize, String keyword, String noticeType) {
@@ -222,6 +224,9 @@ public class CollabNoticeServiceImpl extends ServiceImpl<CollabNoticeMapper, Col
             if (notice.getIsTop() == null) notice.setIsTop(0);
             if (notice.getStatus() == null) notice.setStatus(1);
             save(notice);
+            if (notice.getStatus() == 1) {
+                notifyConfigService.notifyNoticePublished(notice.getTitle(), notice.getNoticeType(), notice.getPublisherName());
+            }
         } else {
             CollabNotice exist = getById(dto.getId());
             if (exist == null) throw new BusinessException("通告不存在");
@@ -240,5 +245,6 @@ public class CollabNoticeServiceImpl extends ServiceImpl<CollabNoticeMapper, Col
     public void remindUnreadUsers(Long id) {
         NoticeReadStatsVO stats = getNoticeReadStats(id);
         log.info("向通告 [{}] 的未读人员 (共 {} 人) 发送催办阅读提醒通知", stats.getTitle(), stats.getUnreadCount());
+        notifyConfigService.notifyNoticePublished("【公文催阅提醒】" + stats.getTitle(), "催办通知", "系统催办中心");
     }
 }

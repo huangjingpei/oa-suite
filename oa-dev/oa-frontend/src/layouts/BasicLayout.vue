@@ -197,7 +197,8 @@ import {
   KeyOutlined,
   ContactsOutlined,
   DollarOutlined,
-  NotificationOutlined
+  NotificationOutlined,
+  RobotOutlined
 } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { updatePasswordApi, updateProfileApi } from '@/api/auth';
@@ -274,6 +275,11 @@ const menuItems = ref([
         key: 'dict',
         icon: () => h(BookOutlined),
         label: '数据字典中心'
+      },
+      {
+        key: 'notify',
+        icon: () => h(RobotOutlined),
+        label: '消息提醒机器人'
       }
     ]
   },
@@ -299,6 +305,7 @@ watch(
     else if (path.includes('system/user')) selectedKeys.value = ['user'];
     else if (path.includes('system/role')) selectedKeys.value = ['role'];
     else if (path.includes('system/dict')) selectedKeys.value = ['dict'];
+    else if (path.includes('system/notify')) selectedKeys.value = ['notify'];
     else selectedKeys.value = ['dashboard'];
   },
   { immediate: true }
@@ -331,6 +338,8 @@ const handleMenuClick = ({ key }: { key: string }) => {
     router.push('/system/role');
   } else if (key === 'dict') {
     router.push('/system/dict');
+  } else if (key === 'notify') {
+    router.push('/system/notify');
   }
 };
 

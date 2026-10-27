@@ -225,4 +225,12 @@ INSERT INTO `oa_hr_salary` (`id`, `salary_month`, `user_id`, `username`, `real_n
 (8004, '2026-10', 1004, 'wangwu', '王五', '行政后勤部', '行政主管', 9000.00, 2500.00, 3500.00, 400.00, 300.00, 15700.00, 1256.00, 942.00, 380.00, 0.00, 13122.00, 1, 0, '2026年10月月度薪资', 'finance'),
 (8005, '2026-09', 1002, 'zhangsan', '张三', '技术研发中心', '高级后端架构师', 12000.00, 4000.00, 4800.00, 0.00, 500.00, 21300.00, 1704.00, 1278.00, 860.00, 0.00, 17458.00, 1, 1, '2026年09月月度薪资已核对归档', 'finance');
 
+-- ------------------------------------------------------------------------------
+-- 9. 企微/钉钉/飞书 提醒机器人初始化配置
+-- ------------------------------------------------------------------------------
+DELETE FROM `oa_sys_notify_config`;
+INSERT INTO `oa_sys_notify_config` (`id`, `platform`, `name`, `webhook_url`, `secret_key`, `status`, `notify_events`, `remark`) VALUES
+(1, 'WECHAT_WORK', '企业微信·待办审批提醒机器人', 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=SAMPLE_KEY_REPLACE_ME', NULL, 0, 'TASK_ASSIGNED,PROCESS_FINISHED,NOTICE_PUBLISHED', '群机器人Webhook，有待办时自动推送高优审批卡片'),
+(2, 'DINGTALK', '钉钉·企业审批流转通知', 'https://oapi.dingtalk.com/robot/send?access_token=SAMPLE_TOKEN_REPLACE_ME', 'SAMPLE_SECRET', 0, 'TASK_ASSIGNED,PROCESS_FINISHED', '钉钉自定义加签机器人');
+
 SET FOREIGN_KEY_CHECKS = 1;

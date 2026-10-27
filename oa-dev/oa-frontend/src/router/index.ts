@@ -94,6 +94,12 @@ const routes: RouteRecordRaw[] = [
         name: 'DictManagement',
         component: () => import('@/views/system/dict/index.vue'),
         meta: { title: '系统数据字典中心' }
+      },
+      {
+        path: 'system/notify',
+        name: 'NotifyConfig',
+        component: () => import('@/views/system/notify/index.vue'),
+        meta: { title: '企微/钉钉/飞书提醒机器人' }
       }
     ]
   },

@@ -15,6 +15,7 @@ import com.graddu.oa.common.enums.TaskTypeEnum;
 import com.graddu.oa.common.exception.BusinessException;
 import com.graddu.oa.module.system.entity.SysUser;
 import com.graddu.oa.module.system.mapper.SysUserMapper;
+import com.graddu.oa.module.system.service.SysNotifyConfigService;
 import com.graddu.oa.module.workflow.dto.ProcessAddSignDTO;
 import com.graddu.oa.module.workflow.dto.ProcessApproveDTO;
 import com.graddu.oa.module.workflow.dto.ProcessRejectDTO;
@@ -52,6 +53,7 @@ public class WfEngineServiceImpl implements WfEngineService {
     private final WfTaskHistoryMapper historyMapper;
     private final WfFreeRouteMapper routeMapper;
     private final SysUserMapper userMapper;
+    private final SysNotifyConfigService notifyConfigService;
     private final JdbcTemplate jdbcTemplate;
     private final ObjectMapper objectMapper;
 
@@ -118,6 +120,10 @@ public class WfEngineServiceImpl implements WfEngineService {
         task.setStatus(TaskStatusEnum.PENDING.getCode());
         task.setCreateTime(LocalDateTime.now());
         taskMapper.insert(task);
+
+        // 异步向企微/钉钉/飞书推送待办提醒卡片
+        notifyConfigService.notifyTaskAssigned(inst.getTitle(), def.getProcName(), currentUser.getRealName(),
+                task.getNodeName(), task.getAssigneeUsername(), task.getAssigneeName());
 
         // 5. 记录发起人提交历史
         recordHistory(inst.getId(), task.getId(), "流程发起", 0, currentUser,
@@ -210,6 +216,9 @@ public class WfEngineServiceImpl implements WfEngineService {
             nextTask.setCreateTime(LocalDateTime.now());
             taskMapper.insert(nextTask);
 
+            notifyConfigService.notifyTaskAssigned(inst.getTitle(), inst.getProcKey(), inst.getInitiatorName(),
+                    nextTask.getNodeName(), nextTask.getAssigneeUsername(), nextTask.getAssigneeName());
+
             route.setCurrentSeq(nextSeq);
             route.setUpdateTime(LocalDateTime.now());
             routeMapper.updateById(route);
@@ -227,6 +236,7 @@ public class WfEngineServiceImpl implements WfEngineService {
 
             // 更新业务单据状态为 2 (审批通过)
             updateBusinessStatus(inst.getBusinessTable(), inst.getBusinessId(), inst.getId(), ProcStatusEnum.APPROVED.getCode());
+            notifyConfigService.notifyProcessFinished(inst.getTitle(), inst.getProcKey(), inst.getInitiatorName(), true);
             log.info("流程已全面办结并生效: instId={}", inst.getId());
         }
     }
@@ -271,6 +281,7 @@ public class WfEngineServiceImpl implements WfEngineService {
 
         // 4. 同步业务单据状态为 3 (已驳回)
         updateBusinessStatus(inst.getBusinessTable(), inst.getBusinessId(), inst.getId(), ProcStatusEnum.REJECTED.getCode());
+        notifyConfigService.notifyProcessFinished(inst.getTitle(), inst.getProcKey(), inst.getInitiatorName(), false);
         log.warn("流程已驳回: instId={}, operator={}, opinion={}", inst.getId(), operator.getUsername(), rejectDTO.getOpinion());
     }
 
@@ -302,6 +313,8 @@ public class WfEngineServiceImpl implements WfEngineService {
         signTask.setStatus(TaskStatusEnum.PENDING.getCode());
         signTask.setCreateTime(LocalDateTime.now());
         taskMapper.insert(signTask);
+        notifyConfigService.notifyTaskAssigned(inst.getTitle(), inst.getProcKey(), inst.getInitiatorName(),
+                signTask.getNodeName(), signTask.getAssigneeUsername(), signTask.getAssigneeName());
 
         recordHistory(inst.getId(), signTask.getId(), task.getNodeName(), task.getNodeSeq(), operator,
                 ActionTypeEnum.ADDSIGN.getCode(), addSignDTO.getOpinion(), targetUser.getUsername(), null);
