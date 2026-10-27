@@ -2,6 +2,8 @@
 **/target/
 **/dist/
 **/out/
+*.jar
+*.war
 
 # Dependencies
 **/node_modules/

@@ -1,0 +1,32 @@
+# ========================================================
+# 盛泰协同办公平台 (OA-Suite) 生产裸机部署独立外部配置
+# 优先级高于 Jar 内置配置，启动时默认自动读取
+# ========================================================
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 请根据生产环境实际修改 MySQL 数据库连接地址与密码
+    url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_NAME:oa_suite}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USER:root}
+    password: ${DB_PWD:root}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 300000
+      max-lifetime: 900000
+      connection-timeout: 30000
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+logging:
+  file:
+    name: logs/oa-backend.log
+  level:
+    root: INFO
+    com.graddu.oa: INFO

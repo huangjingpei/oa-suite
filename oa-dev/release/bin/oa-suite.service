@@ -1,0 +1,16 @@
+[Unit]
+Description=ShengTai OA-Suite Backend Daemon Service
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/oa-suite
+ExecStart=/usr/bin/java -server -Xms512m -Xmx1024m -XX:+UseG1GC -Dfile.encoding=UTF-8 -Dspring.profiles.active=prod -jar /opt/oa-suite/oa-backend-1.0.0.jar
+Restart=always
+RestartSec=10
+StandardOutput=append:/opt/oa-suite/logs/service.log
+StandardError=append:/opt/oa-suite/logs/service-error.log
+
+[Install]
+WantedBy=multi-user.target
