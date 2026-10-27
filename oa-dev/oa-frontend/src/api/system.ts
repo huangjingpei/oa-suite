@@ -91,6 +91,10 @@ export function deleteUserApi(id: number) {
   return request.delete<any, R<boolean>>(`/sys/user/${id}`);
 }
 
+export function getAddressBookApi(params?: { deptId?: number; keyword?: string }) {
+  return request.get<any, R<UserVO[]>>('/sys/user/address-book', { params });
+}
+
 // ==================== 3. 角色与权限体系 (Role) ====================
 
 export interface RoleItem {

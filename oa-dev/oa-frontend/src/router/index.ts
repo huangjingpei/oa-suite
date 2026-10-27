@@ -54,6 +54,12 @@ const routes: RouteRecordRaw[] = [
       },
       // 系统组织管理
       {
+        path: 'system/address',
+        name: 'AddressBook',
+        component: () => import('@/views/system/address/index.vue'),
+        meta: { title: '企业全员通讯录' }
+      },
+      {
         path: 'system/dept',
         name: 'DeptManagement',
         component: () => import('@/views/system/dept/index.vue'),

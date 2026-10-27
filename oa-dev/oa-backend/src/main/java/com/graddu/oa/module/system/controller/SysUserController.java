@@ -28,6 +28,15 @@ public class SysUserController {
         return R.ok(userService.listAllUsers());
     }
 
+    @GetMapping("/address-book")
+    @Operation(summary = "企业全员通讯录名录查询")
+    public R<List<UserVO>> getAddressBook(
+            @RequestParam(value = "deptId", required = false) Long deptId,
+            @RequestParam(value = "keyword", required = false) String keyword
+    ) {
+        return R.ok(userService.listAddressBook(deptId, keyword));
+    }
+
     @GetMapping("/page")
     @Operation(summary = "分页查询员工用户列表")
     public R<PageResult<UserVO>> pageUsers(

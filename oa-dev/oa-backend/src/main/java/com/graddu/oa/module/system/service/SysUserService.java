@@ -25,6 +25,8 @@ public interface SysUserService extends IService<SysUser> {
 
     List<UserVO> listAllUsers();
 
+    List<UserVO> listAddressBook(Long deptId, String keyword);
+
     PageResult<UserVO> pageUsers(Integer pageNum, Integer pageSize, String keyword, Long deptId, Integer status);
 
     void createUser(UserCreateDTO dto);

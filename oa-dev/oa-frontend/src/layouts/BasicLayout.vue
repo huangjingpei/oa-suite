@@ -194,7 +194,8 @@ import {
   MobileOutlined,
   LogoutOutlined,
   UserOutlined,
-  KeyOutlined
+  KeyOutlined,
+  ContactsOutlined
 } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { updatePasswordApi, updateProfileApi } from '@/api/auth';
@@ -263,6 +264,11 @@ const menuItems = ref([
         label: '数据字典中心'
       }
     ]
+  },
+  {
+    key: 'address',
+    icon: () => h(ContactsOutlined),
+    label: '企业全员通讯录'
   }
 ]);
 
@@ -274,6 +280,7 @@ watch(
     else if (path.includes('business/seal')) selectedKeys.value = ['seal'];
     else if (path.includes('business/redhead')) selectedKeys.value = ['redhead'];
     else if (path.includes('business/borrow')) selectedKeys.value = ['borrow'];
+    else if (path.includes('system/address')) selectedKeys.value = ['address'];
     else if (path.includes('system/dept')) selectedKeys.value = ['dept'];
     else if (path.includes('system/user')) selectedKeys.value = ['user'];
     else if (path.includes('system/role')) selectedKeys.value = ['role'];
@@ -296,6 +303,8 @@ const handleMenuClick = ({ key }: { key: string }) => {
     router.push('/business/redhead');
   } else if (key === 'borrow') {
     router.push('/business/borrow');
+  } else if (key === 'address') {
+    router.push('/system/address');
   } else if (key === 'dept') {
     router.push('/system/dept');
   } else if (key === 'user') {

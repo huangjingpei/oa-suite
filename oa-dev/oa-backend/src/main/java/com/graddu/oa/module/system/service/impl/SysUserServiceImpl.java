@@ -31,9 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -181,6 +179,60 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             result.add(vo);
         }
         return result;
+    }
+
+    @Override
+    public List<UserVO> listAddressBook(Long deptId, String keyword) {
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysUser::getStatus, 1);
+
+        if (deptId != null && deptId > 0) {
+            List<SysDept> allDepts = deptMapper.selectList(new LambdaQueryWrapper<SysDept>().eq(SysDept::getStatus, 1));
+            Set<Long> targetDeptIds = new HashSet<>();
+            targetDeptIds.add(deptId);
+            collectSubDeptIds(deptId, allDepts, targetDeptIds);
+            wrapper.in(SysUser::getDeptId, targetDeptIds);
+        }
+
+        if (StringUtils.hasText(keyword)) {
+            String kw = keyword.trim();
+            wrapper.and(w -> w.like(SysUser::getRealName, kw)
+                    .or().like(SysUser::getUsername, kw)
+                    .or().like(SysUser::getWorkNo, kw)
+                    .or().like(SysUser::getPhone, kw)
+                    .or().like(SysUser::getEmail, kw)
+                    .or().like(SysUser::getPostName, kw));
+        }
+
+        wrapper.orderByAsc(SysUser::getDeptId).orderByAsc(SysUser::getWorkNo);
+        List<SysUser> list = list(wrapper);
+        if (list.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        Map<Long, String> deptMap = deptMapper.selectList(new LambdaQueryWrapper<SysDept>())
+                .stream().collect(Collectors.toMap(SysDept::getId, SysDept::getDeptName, (v1, v2) -> v1));
+
+        List<UserVO> result = new ArrayList<>(list.size());
+        for (SysUser user : list) {
+            UserVO vo = new UserVO();
+            BeanUtils.copyProperties(user, vo);
+            if (user.getDeptId() != null) {
+                vo.setDeptName(deptMap.get(user.getDeptId()));
+            }
+            fillUserRoles(vo, user.getId());
+            result.add(vo);
+        }
+        return result;
+    }
+
+    private void collectSubDeptIds(Long parentId, List<SysDept> allDepts, Set<Long> result) {
+        for (SysDept d : allDepts) {
+            if (parentId.equals(d.getParentId()) && !result.contains(d.getId())) {
+                result.add(d.getId());
+                collectSubDeptIds(d.getId(), allDepts, result);
+            }
+        }
     }
 
     @Override
