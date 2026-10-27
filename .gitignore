@@ -1,0 +1,23 @@
+# Target & Build outputs
+**/target/
+**/dist/
+**/out/
+
+# Dependencies
+**/node_modules/
+.pnpm-store/
+
+# Logs
+**/logs/
+**/*.log
+
+# IDE & Editor files
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Temporary & Uploads
+**/uploads/
+**/*.tmp

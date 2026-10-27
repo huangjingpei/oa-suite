@@ -1,0 +1,291 @@
+<template>
+  <div id="app">
+    <section>
+      <div class="weui-cells" style="margin-top:0px;">
+
+        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+          <van-swipe-item>欢迎来到鹏程OA移动办公APP</van-swipe-item>
+        </van-swipe>
+
+        <router-link to="" class="weui-cell weui-cell-app_access" style="padding:0px 0px;padding-left:0px;border-top:0px solid #ffffff;">
+          <van-notice-bar style="width:100%;" color="#1989fa" background="#ecf9ff"
+            left-icon="volume-o"
+            text="在代码阅读过程中人们说脏话的频率是衡量代码质量的唯一标准。"
+          />
+        </router-link>
+      </div>
+
+      <div class="weui-cells">
+        <div class="weui-cell-title">常用应用</div>
+        <div class="weui-cell weui-cell-app_access" id="scanCell">
+          <div class="weui-cell_app_hd" @click="$router.push(`/app/doingtask`)">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png" >
+            <div class="weui-cell_app_bd" >
+              待办
+            </div>
+          </div>
+          <div class="weui-cell_app_hd" @click="$router.push(`/app/donetask`)">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/home_00.png" >
+            <div class="weui-cell_app_bd">
+              已办
+            </div>
+          </div>
+          <div class="weui-cell_app_hd" @click="$router.push(`/app/news`)">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
+            <div class="weui-cell_app_bd">
+              公告
+            </div>
+          </div>
+          <div class="weui-cell_app_hd" @click="$router.push(`/app/punch`)">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" >
+            <div class="weui-cell_app_bd">
+              打卡
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="weui-cells">
+        <div class="weui-cell-title">人事管理</div>
+        <div class="weui-cell weui-cell-app_access" id="scanCell">
+          <div class="weui-cell_app_hd" @click="$router.push(`/app/sign`)">
+           <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
+            <div class="weui-cell_app_bd" >
+              签到
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
+            <div class="weui-cell_app_bd">
+              请假
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png" >
+            <div class="weui-cell_app_bd">
+              外出
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/overtime.png" >
+            <div class="weui-cell_app_bd">
+              加班
+            </div>
+          </div>
+        </div>
+        <div class="weui-cell weui-cell-app_access" id="scanCell">
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/person.png" >
+            <div class="weui-cell_app_bd" >
+              考勤
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
+            <div class="weui-cell_app_bd">
+              物品
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png" >
+            <div class="weui-cell_app_bd">
+              用章
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
+            <div class="weui-cell_app_bd">
+              档案
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="weui-cells">
+        <div class="weui-cell-title">财务管理</div>
+        <div class="weui-cell weui-cell-app_access" id="scanCell">
+          <div class="weui-cell_app_hd">
+           <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
+            <div class="weui-cell_app_bd" >
+              付款
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
+            <div class="weui-cell_app_bd">
+              采购
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
+            <div class="weui-cell_app_bd">
+              车补
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/overtime.png" >
+            <div class="weui-cell_app_bd">
+              报销
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="weui-cells">
+        <div class="weui-cell-title">差旅商旅</div>
+        <div class="weui-cell weui-cell-app_access" id="scanCell">
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/trip.png" >
+            <div class="weui-cell_app_bd" >
+              出差
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png" >
+            <div class="weui-cell_app_bd">
+              外出
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+
+          </div>
+          <div class="weui-cell_app_hd">
+
+          </div>
+        </div>
+      </div>
+
+      <div class="weui-cells" style="margin-top:80px;height:0px;">
+      </div>
+
+
+    </section>
+  </div>
+</template>
+<script>
+import * as storage from '@/request/storage';
+import * as tools from '@/request/tools';
+
+export default {
+    mixins: [window.mixin],
+    data() {
+        return {
+            pageName: "应用",
+            momentNewMsg: true
+        }
+    },
+    activated() {
+      this.$store.commit("toggleTipsStatus", -1);
+      this.changeStyle();
+      this.displayFoot();
+    },
+    mounted() {
+      this.changeStyle();
+      this.displayFoot();
+    },
+    methods: {
+        changeStyle(name) {
+          var name = window.location.hash.slice(2);
+          $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
+          $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
+          $(`#wx-nav-${name}`).addClass('router-link-exact-active');
+          $(`#wx-nav-${name}`).addClass('router-link-active');
+          console.log(name);
+        },
+        displayFoot() {
+          $('.app-footer').css('display','block');
+        },
+        async userLogin(){
+
+          //检查用户是否存在
+          let vuser = await queryUserInfoByView(this.username);
+
+          //显示加载状态
+          this.loading = true;
+
+          try {
+            if(tools.isNull(this.username)){
+              vant.Toast('请输入账号/手机/邮箱登录！');
+            } else if(tools.isNull(this.password)){
+              vant.Toast('请输入密码！');
+            } else if(tools.isNull(vuser)){
+              vant.Toast('此账户不存在！');
+            } else {
+              let username = this.username;
+              let password = this.password;
+              let response = await superagent
+                    .post(loginURL)
+                    .send({"remember_me":true,"auto_login":false,"username":username,"password":password})
+                    .set('accept', 'application/json');
+
+              if(!tools.isNull(response) && !tools.isNull(response.body)
+                && response.body.code == 200 && response.body.message == "登录成功"){
+                  let userinfo = response.body.result.userInfo;
+                  let token = response.body.result.token;
+                  let department = response.body.result.departs;
+                  userinfo.password = password;
+                  storage.setStore('system_linfo' , JSON.stringify({username:username,password:password}) , 3600 * 24 * 30);
+                  storage.setStore('system_userinfo' , JSON.stringify(userinfo) , 3600 * 24 * 30);
+                  storage.setStore('system_token' , JSON.stringify(token) , 3600 * 24 * 30);
+                  storage.setStore('system_department' , JSON.stringify(department) , 3600 * 24 * 30);
+                  storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
+                  vant.Toast('登录成功！');
+                  this.$router.push(`/explore`);
+                  this.loading = false;
+              } else {
+                  vant.Toast('登录失败: ' + response.body.message);
+                  this.loading = false;
+              }
+            }
+          } catch (error) {
+            this.loading = false;
+          }
+        },
+        async clearLoginInfo(){
+
+          try {
+            let info = await storage.getStore('system_linfo');
+
+            this.username = info.username;
+            this.password = info.password;
+
+            storage.clearStore('system_userinfo');
+            storage.clearStore('system_token');
+            storage.clearStore('system_department');
+            storage.clearStore('system_login_time');
+          } catch (error) {
+            console.log(error);
+          }
+
+        }
+    }
+}
+</script>
+<style>
+    @import "../../assets/css/explore.css";
+
+    .weui-cell-title{
+      margin-left: 20px;
+      margin-top: 2px;
+      padding-top: 4px;
+      border: 0px solid #fefefe;
+      width: 100px;
+      font-size: 16px;
+    }
+
+    #search {
+      display:none;
+    }
+
+    .app-footer {
+      display:block;
+    }
+
+    .my-swipe .van-swipe-item {
+      color: #fff;
+      font-size: 20px;
+      line-height: 180px;
+      text-align: center;
+      background-color: #39a9ed;
+    }
+</style>
