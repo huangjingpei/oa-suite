@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 >nul
 :: ==============================================================================
-:: 云枢协同系统 · 企业级白标/客户品牌一键定制重塑脚本 (Windows Batch 版)
+:: 启航协同系统 · 企业级白标/客户品牌一键定制重塑脚本 (Windows Batch 版)
 :: ==============================================================================
 
 set SCRIPT_DIR=%~dp0
@@ -19,24 +19,24 @@ set "DOC_PREFIX=%~4"
 if "%SYSTEM_NAME%"=="" (
     echo.
     echo 请输入您想要为客户定制的品牌信息（直接回车使用默认推荐值）:
-    set /p "SYSTEM_NAME= [1] 系统显示名称 (默认: 云枢协同办公平台): "
+    set /p "SYSTEM_NAME= [1] 系统显示名称 (默认: 启航 OA 协同平台): "
 )
-if "%SYSTEM_NAME%"=="" set "SYSTEM_NAME=云枢协同办公平台"
+if "%SYSTEM_NAME%"=="" set "SYSTEM_NAME=启航 OA 协同平台"
 
 if "%COMPANY_FULL%"=="" (
-    set /p "COMPANY_FULL= [2] 客户公司全称 (默认: 云枢智慧协同科技有限公司): "
+    set /p "COMPANY_FULL= [2] 客户公司全称 (默认: 启航智慧协同科技有限公司): "
 )
-if "%COMPANY_FULL%"=="" set "COMPANY_FULL=云枢智慧协同科技有限公司"
+if "%COMPANY_FULL%"=="" set "COMPANY_FULL=启航智慧协同科技有限公司"
 
 if "%COMPANY_SHORT%"=="" (
-    set /p "COMPANY_SHORT= [3] 客户企业简称 (默认: 云枢协同): "
+    set /p "COMPANY_SHORT= [3] 客户企业简称 (默认: 启航协同): "
 )
-if "%COMPANY_SHORT%"=="" set "COMPANY_SHORT=云枢协同"
+if "%COMPANY_SHORT%"=="" set "COMPANY_SHORT=启航协同"
 
 if "%DOC_PREFIX%"=="" (
-    set /p "DOC_PREFIX= [4] 红头公文字号代字 (默认: 云枢发): "
+    set /p "DOC_PREFIX= [4] 红头公文字号代字 (默认: 启航发): "
 )
-if "%DOC_PREFIX%"=="" set "DOC_PREFIX=云枢发"
+if "%DOC_PREFIX%"=="" set "DOC_PREFIX=启航发"
 
 echo.
 echo -----------------------------------------------------------------

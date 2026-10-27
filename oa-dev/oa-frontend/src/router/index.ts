@@ -161,7 +161,7 @@ const router = createRouter({
 // 全局路由守卫
 router.beforeEach((to, _from, next) => {
   if (to.meta.title) {
-    document.title = `${to.meta.title} | 云枢 OA 协同平台`;
+    document.title = `${to.meta.title} | 启航 OA 协同平台`;
   }
   const token = localStorage.getItem('oa_token');
   if (to.path !== '/login' && !token) {

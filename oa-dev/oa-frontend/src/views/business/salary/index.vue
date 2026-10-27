@@ -190,7 +190,7 @@
     >
       <div v-if="currentSalary" id="salary-slip" class="salary-slip-doc">
         <div class="slip-header">
-          <h2 class="slip-title">云枢智慧协同科技有限公司</h2>
+          <h2 class="slip-title">启航智慧协同科技有限公司</h2>
           <h3 class="slip-sub">【{{ currentSalary.salaryMonth }}】月度薪资明细单</h3>
         </div>
 
@@ -255,7 +255,7 @@
         </div>
 
         <div class="slip-footer">
-          <div>核算单位：云枢协同财务与薪酬中心</div>
+          <div>核算单位：启航协同财务与薪酬中心</div>
           <div>签收状态：{{ currentSalary.isConfirmed === 1 ? '已在线核对签收' : '待本人签收' }}</div>
         </div>
 

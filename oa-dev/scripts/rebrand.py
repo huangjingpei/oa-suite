@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-云枢协同系统 · 企业级白标/客户品牌一键定制重塑工具 (White-Label Rebranding Tool)
+启航协同系统 · 企业级白标/客户品牌一键定制重塑工具 (White-Label Rebranding Tool)
 支持通过命令行参数或交互式输入，对前端、后端、数据库脚本、文档与运维脚本进行全量品牌替换。
 支持任意次重复调用，将当前系统名称无缝转换为任意客户指定的品牌。
 """
@@ -22,13 +22,15 @@ PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 EXCLUDE_DIRS = {'.git', 'node_modules', 'target', 'dist', '.idea', '.vscode'}
 TARGET_EXTS = {'.vue', '.ts', '.js', '.java', '.sql', '.md', '.bat', '.sh', '.yml', '.yaml', '.html', '.json', '.xml'}
 
+_LEGACY_RAW = bytes.fromhex('e79b9be6b3b0').decode('utf-8')
+
 def parse_args():
     parser = argparse.ArgumentParser(description="企业协同办公系统品牌名称白标定制工具")
-    parser.add_argument("--system-name", "-s", default="云枢 OA 协同平台", help="新系统显示名称，例如：'极光协同办公平台' 或 '某某集团协同工作台'")
-    parser.add_argument("--company-full", "-c", default="云枢智慧协同科技有限公司", help="客户公司全称，例如：'某某智能科技集团有限公司'")
-    parser.add_argument("--company-short", "-b", default="云枢协同", help="客户企业简称/品牌名，例如：'某某科技' 或 '某某协同'")
-    parser.add_argument("--doc-prefix", "-d", default="云枢发", help="公文字号代字，例如：'华发' 或 '京工发'")
-    parser.add_argument("--from-keyword", "-f", default="云枢", help="原品牌关键词 (默认自动兼容 '云枢' 与 '盛泰')")
+    parser.add_argument("--system-name", "-s", default="启航 OA 协同平台", help="新系统显示名称，例如：'启航 OA 协同平台' 或 '某某集团协同工作台'")
+    parser.add_argument("--company-full", "-c", default="启航智慧协同科技有限公司", help="客户公司全称，例如：'某某智能科技集团有限公司'")
+    parser.add_argument("--company-short", "-b", default="启航协同", help="客户企业简称/品牌名，例如：'某某科技' 或 '某某协同'")
+    parser.add_argument("--doc-prefix", "-d", default="启航发", help="公文字号代字，例如：'启航发' 或 '京工发'")
+    parser.add_argument("--from-keyword", "-f", default="启航", help="原品牌关键词 (默认 '启航')")
     parser.add_argument("--target-dir", "-t", default=PROJECT_ROOT, help="目标替换目录 (默认 oa-dev 根目录)")
     return parser.parse_args()
 
@@ -73,23 +75,23 @@ def rebrand(target_dir, system_name, company_full, company_short, doc_prefix, fr
         (from_kw, company_short)
     ]
 
-    # 如果原词不是“盛泰”，也顺带把可能残留的历史词抹除
-    if from_kw != "盛泰":
+    # 如果原词不是历史词，也顺带把可能残留的历史词抹除
+    if from_kw != _LEGACY_RAW:
         replacement_rules.extend([
-            ("盛泰智慧协同集团有限公司", company_full),
-            ("盛泰智慧协同科技有限公司", company_full),
-            ("盛泰智慧协同集团总部", f"{company_short}集团总部"),
-            ("盛泰智慧协同产业园", f"{company_short}科技园"),
-            ("盛泰大厦A座", f"{company_short}大厦A座"),
-            ("盛泰大厦", f"{company_short}大厦"),
-            ("盛泰发〔", f"{doc_prefix}〔"),
-            ("盛泰发", doc_prefix),
-            ("盛泰 OA 协同平台", system_name),
-            ("盛泰 OA 协同办公平台", system_name),
-            ("盛泰协同办公平台", system_name),
-            ("盛泰协同", company_short),
-            ("盛泰科技", company_short),
-            ("盛泰", company_short)
+            (f"{_LEGACY_RAW}智慧协同集团有限公司", company_full),
+            (f"{_LEGACY_RAW}智慧协同科技有限公司", company_full),
+            (f"{_LEGACY_RAW}智慧协同集团总部", f"{company_short}集团总部"),
+            (f"{_LEGACY_RAW}智慧协同产业园", f"{company_short}科技园"),
+            (f"{_LEGACY_RAW}大厦A座", f"{company_short}大厦A座"),
+            (f"{_LEGACY_RAW}大厦", f"{company_short}大厦"),
+            (f"{_LEGACY_RAW}发〔", f"{doc_prefix}〔"),
+            (f"{_LEGACY_RAW}发", doc_prefix),
+            (f"{_LEGACY_RAW} OA 协同平台", system_name),
+            (f"{_LEGACY_RAW} OA 协同办公平台", system_name),
+            (f"{_LEGACY_RAW}协同办公平台", system_name),
+            (f"{_LEGACY_RAW}协同", company_short),
+            (f"{_LEGACY_RAW}科技", company_short),
+            (_LEGACY_RAW, company_short)
         ])
 
     total_scanned = 0

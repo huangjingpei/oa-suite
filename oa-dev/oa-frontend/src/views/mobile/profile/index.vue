@@ -6,7 +6,7 @@
         {{ userStore.displayName.charAt(0) }}
       </a-avatar>
       <div class="profile-name">{{ userStore.displayName }}</div>
-      <div class="profile-dept">{{ userStore.userInfo?.deptName || '云枢协同' }} · {{ userStore.userInfo?.postName || '员工' }}</div>
+      <div class="profile-dept">{{ userStore.userInfo?.deptName || '启航协同' }} · {{ userStore.userInfo?.postName || '员工' }}</div>
       <div class="profile-workno">工号：{{ userStore.userInfo?.workNo || 'OA1001' }}</div>
     </div>
 

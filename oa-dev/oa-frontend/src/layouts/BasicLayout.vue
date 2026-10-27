@@ -9,7 +9,7 @@
     >
       <div class="logo">
         <span class="logo-icon">🏢</span>
-        <span v-if="!collapsed" class="logo-text">云枢 OA 协同平台</span>
+        <span v-if="!collapsed" class="logo-text">启航 OA 协同平台</span>
       </div>
       <a-menu
         v-model:selectedKeys="selectedKeys"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# 云枢协同系统 · 企业级白标/客户品牌一键定制重塑脚本 (White-Label Rebrand Script)
+# 启航协同系统 · 企业级白标/客户品牌一键定制重塑脚本 (White-Label Rebrand Script)
 # 用途：为不同客户实施交付时，一键将系统内外所有品牌、公司全称、简称、公文字号
 #       替换为客户指定的名称，彻底抹除源码原始品牌印记。
 #
@@ -29,23 +29,23 @@ DOC_PREFIX="$4"
 if [ -z "$SYSTEM_NAME" ]; then
     echo ""
     echo "请输入您想要为客户定制的品牌信息（直接回车使用默认推荐值）:"
-    read -p " [1] 系统显示名称 (默认: 云枢协同办公平台): " INPUT_SYS
-    SYSTEM_NAME="${INPUT_SYS:-云枢协同办公平台}"
+    read -p " [1] 系统显示名称 (默认: 启航 OA 协同平台): " INPUT_SYS
+    SYSTEM_NAME="${INPUT_SYS:-启航 OA 协同平台}"
 fi
 
 if [ -z "$COMPANY_FULL" ]; then
-    read -p " [2] 客户公司全称 (默认: 云枢智慧协同科技有限公司): " INPUT_FULL
-    COMPANY_FULL="${INPUT_FULL:-云枢智慧协同科技有限公司}"
+    read -p " [2] 客户公司全称 (默认: 启航智慧协同科技有限公司): " INPUT_FULL
+    COMPANY_FULL="${INPUT_FULL:-启航智慧协同科技有限公司}"
 fi
 
 if [ -z "$COMPANY_SHORT" ]; then
-    read -p " [3] 客户企业简称 (默认: 云枢协同): " INPUT_SHORT
-    COMPANY_SHORT="${INPUT_SHORT:-云枢协同}"
+    read -p " [3] 客户企业简称 (默认: 启航协同): " INPUT_SHORT
+    COMPANY_SHORT="${INPUT_SHORT:-启航协同}"
 fi
 
 if [ -z "$DOC_PREFIX" ]; then
-    read -p " [4] 红头公文字号代字 (默认: 云枢发): " INPUT_PREFIX
-    DOC_PREFIX="${INPUT_PREFIX:-云枢发}"
+    read -p " [4] 红头公文字号代字 (默认: 启航发): " INPUT_PREFIX
+    DOC_PREFIX="${INPUT_PREFIX:-启航发}"
 fi
 
 echo ""
@@ -84,21 +84,21 @@ else
         -o -name "*.yml" -o -name "*.html" \) \
         ! -path "*/.git/*" ! -path "*/node_modules/*" ! -path "*/target/*" ! -path "*/dist/*" \
         | while read -r file; do
-            sed -i "s/云枢智慧协同科技有限公司/${COMPANY_FULL}/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢智慧协同科技有限公司/${COMPANY_FULL}/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢协同集团总部/${COMPANY_SHORT}集团总部/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢协同科技园/${COMPANY_SHORT}科技园/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢协同财务与薪酬中心/${COMPANY_SHORT}财务与薪酬中心/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢协同大厦A座/${COMPANY_SHORT}大厦A座/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢协同大厦/${COMPANY_SHORT}大厦/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢发〔/${DOC_PREFIX}〔/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢发/${DOC_PREFIX}/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢 OA 协同平台/${SYSTEM_NAME}/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢 OA 协同平台/${SYSTEM_NAME}/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢 OA 协同平台/${SYSTEM_NAME}/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢协同/${COMPANY_SHORT}/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢协同/${COMPANY_SHORT}/g" "$file" 2>/dev/null || true
-            sed -i "s/云枢协同/${COMPANY_SHORT}/g" "$file" 2>/dev/null || true
+            sed -i "s/启航智慧协同科技有限公司/${COMPANY_FULL}/g" "$file" 2>/dev/null || true
+            sed -i "s/启航智慧协同科技有限公司/${COMPANY_FULL}/g" "$file" 2>/dev/null || true
+            sed -i "s/启航协同集团总部/${COMPANY_SHORT}集团总部/g" "$file" 2>/dev/null || true
+            sed -i "s/启航协同科技园/${COMPANY_SHORT}科技园/g" "$file" 2>/dev/null || true
+            sed -i "s/启航协同财务与薪酬中心/${COMPANY_SHORT}财务与薪酬中心/g" "$file" 2>/dev/null || true
+            sed -i "s/启航协同大厦A座/${COMPANY_SHORT}大厦A座/g" "$file" 2>/dev/null || true
+            sed -i "s/启航协同大厦/${COMPANY_SHORT}大厦/g" "$file" 2>/dev/null || true
+            sed -i "s/启航发〔/${DOC_PREFIX}〔/g" "$file" 2>/dev/null || true
+            sed -i "s/启航发/${DOC_PREFIX}/g" "$file" 2>/dev/null || true
+            sed -i "s/启航 OA 协同平台/${SYSTEM_NAME}/g" "$file" 2>/dev/null || true
+            sed -i "s/启航 OA 协同平台/${SYSTEM_NAME}/g" "$file" 2>/dev/null || true
+            sed -i "s/启航 OA 协同平台/${SYSTEM_NAME}/g" "$file" 2>/dev/null || true
+            sed -i "s/启航协同/${COMPANY_SHORT}/g" "$file" 2>/dev/null || true
+            sed -i "s/启航协同/${COMPANY_SHORT}/g" "$file" 2>/dev/null || true
+            sed -i "s/启航协同/${COMPANY_SHORT}/g" "$file" 2>/dev/null || true
         done
     echo " [✓] 纯 Bash 模式替换完毕！"
 fi

@@ -4,7 +4,7 @@
     <div class="location-banner">
       <EnvironmentOutlined class="location-icon" />
       <div class="location-text">
-        <div style="font-weight: 600">北京市海淀区中关村南大街云枢协同大厦</div>
+        <div style="font-weight: 600">北京市海淀区中关村南大街启航协同大厦</div>
         <div style="font-size: 11px; opacity: 0.9">已进入办公园区 WiFi 打卡有效范围 (GPS 精度 5m)</div>
       </div>
     </div>
@@ -92,7 +92,7 @@ const loadRecords = async () => {
         clockType: 'ON',
         clockTime: dayjs().format('YYYY-MM-DD 08:52:16'),
         deviceType: 'MOBILE',
-        locationAddress: '北京市海淀区云枢协同大厦A座',
+        locationAddress: '北京市海淀区启航协同大厦A座',
         status: 0
       }
     ];
@@ -105,7 +105,7 @@ const handleClockIn = async () => {
     const res = await clockInApi({
       clockType: nextPunchType.value,
       deviceType: 'MOBILE',
-      locationAddress: '云枢协同科技园 (移动端H5签到)'
+      locationAddress: '启航协同科技园 (移动端H5签到)'
     });
     if (res.code === 200) {
       message.success(nextPunchType.value === 'ON' ? '上班签到成功！' : '下班签退成功！');

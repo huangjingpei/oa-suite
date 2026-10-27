@@ -9,7 +9,7 @@
         </div>
         <div class="header-right">
           <a-tag color="blue" style="margin-right: 0">
-            {{ userStore.userInfo?.deptName || '云枢协同' }}
+            {{ userStore.userInfo?.deptName || '启航协同' }}
           </a-tag>
         </div>
       </header>

@@ -355,7 +355,7 @@ const loadData = async () => {
         username: 'admin',
         realName: '超级管理员',
         workNo: 'OA0001',
-        deptName: '云枢协同集团总部',
+        deptName: '启航协同集团总部',
         postName: '总系统架构师',
         phone: '13800000001',
         email: 'admin@graddu.com',
