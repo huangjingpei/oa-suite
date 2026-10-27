@@ -263,3 +263,35 @@ export interface EgressVO {
   procStatus: number;
   createTime: string;
 }
+
+// ==================== 8. 月度工资条 (HR Salary) ====================
+
+export interface SalaryVerifyDTO {
+  password: string;
+}
+
+export interface SalaryVO {
+  id: number;
+  salaryMonth: string;
+  userId: number;
+  username: string;
+  realName: string;
+  deptName?: string;
+  postName?: string;
+  baseSalary: number;
+  postSalary: number;
+  performanceSalary: number;
+  overtimeSalary: number;
+  bonus: number;
+  grossSalary: number;
+  pensionFee: number;
+  housingFund: number;
+  taxFee: number;
+  otherDeduction: number;
+  netSalary: number;
+  status: number;
+  isConfirmed: number;
+  confirmTime?: string;
+  remark?: string;
+  createTime: string;
+}

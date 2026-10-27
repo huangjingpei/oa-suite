@@ -415,6 +415,42 @@ CREATE TABLE `oa_hr_clock_record` (
   KEY `idx_clock_time` (`clock_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='员工日常考勤打卡流水表';
 
+-- 3.7 员工月度工资条表 (替代 BS_SALARY)
+DROP TABLE IF EXISTS `oa_hr_salary`;
+CREATE TABLE `oa_hr_salary` (
+  `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
+  `salary_month` VARCHAR(10) NOT NULL COMMENT '薪酬月份 (如 2026-10)',
+  `user_id` BIGINT UNSIGNED NOT NULL COMMENT '员工用户ID',
+  `username` VARCHAR(64) NOT NULL COMMENT '员工工号/账号',
+  `real_name` VARCHAR(64) NOT NULL COMMENT '真实姓名',
+  `dept_name` VARCHAR(100) DEFAULT NULL COMMENT '所属部门',
+  `post_name` VARCHAR(64) DEFAULT NULL COMMENT '职务岗位',
+  `base_salary` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '基本薪资',
+  `post_salary` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '岗位工资/津贴',
+  `performance_salary` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '绩效奖金',
+  `overtime_salary` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '加班工时补贴',
+  `bonus` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '全勤/专项激励奖',
+  `gross_salary` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '应发总计 (Gross)',
+  `pension_fee` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '个人社保五险',
+  `housing_fund` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '个人住房公积金',
+  `tax_fee` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '个人所得税扣缴',
+  `other_deduction` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '迟到旷工/其他扣除',
+  `net_salary` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '税后实发金额 (Net Pay)',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '发放状态 (1已发放, 0核算中)',
+  `is_confirmed` TINYINT NOT NULL DEFAULT 0 COMMENT '员工签收状态 (0待签收, 1已核对签收)',
+  `confirm_time` DATETIME DEFAULT NULL COMMENT '签收确认时间',
+  `remark` VARCHAR(500) DEFAULT NULL COMMENT '发放备注说明',
+  `create_by` VARCHAR(64) DEFAULT NULL COMMENT '核算人',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '核算时间',
+  `update_by` VARCHAR(64) DEFAULT NULL COMMENT '修改人',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `is_deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_user_month` (`username`, `salary_month`),
+  KEY `idx_month` (`salary_month`),
+  KEY `idx_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='员工月度工资条与薪酬核算表';
+
 -- ------------------------------------------------------------------------------
 -- 4. 行政公文与印章管理模块 (oa_adm_*)
 -- 规范化原 bs_seal_normal, bs_seal_contract, bs_seal_declare, bs_redhead, bs_record_borrow

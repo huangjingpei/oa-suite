@@ -16,7 +16,9 @@ import type {
   OvertimeApplyDTO,
   OvertimeVO,
   EgressApplyDTO,
-  EgressVO
+  EgressVO,
+  SalaryVerifyDTO,
+  SalaryVO
 } from '@/types/business';
 
 // ==================== 1. 请假业务 (HR Leave) ====================
@@ -133,4 +135,22 @@ export function getEgressDetailApi(id: number) {
 
 export function getMyEgressesApi(params: { pageNum?: number; pageSize?: number }) {
   return request.get<any, R<PageResult<EgressVO>>>('/hr/egress/my', { params });
+}
+
+// ==================== 9. 月度工资条 (HR Salary) ====================
+
+export function verifySalaryPasswordApi(data: SalaryVerifyDTO) {
+  return request.post<any, R<boolean>>('/hr/salary/verify-pwd', data);
+}
+
+export function getMySalariesApi(params: { month?: string; pageNum?: number; pageSize?: number }) {
+  return request.get<any, R<PageResult<SalaryVO>>>('/hr/salary/my', { params });
+}
+
+export function getSalaryDetailApi(id: number) {
+  return request.get<any, R<SalaryVO>>(`/hr/salary/detail/${id}`);
+}
+
+export function confirmSalaryApi(id: number) {
+  return request.put<any, R<boolean>>(`/hr/salary/confirm/${id}`);
 }
