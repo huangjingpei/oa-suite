@@ -122,9 +122,7 @@ const goBack = () => {
 onMounted(async () => {
   try {
     const res: any = await getPendingTasksApi(1, 5);
-    if (res?.data?.data) {
-      pendingCount.value = res.data.data.total || 0;
-    }
+    pendingCount.value = res?.data?.total || res?.data?.data?.total || 0;
   } catch {}
 });
 </script>

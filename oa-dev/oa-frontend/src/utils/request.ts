@@ -30,7 +30,22 @@ request.interceptors.response.use(
     const res = response.data;
     // 后端返回标准 ResultCode.SUCCESS = 200
     if (res.code === 200) {
-      return response;
+      const payload: any = res;
+      payload.status = response.status;
+      payload.headers = response.headers;
+      // 兼容按 response.data.data 访问
+      if (res.data && typeof res.data === 'object' && !('data' in (res.data as any))) {
+        try {
+          Object.defineProperty(res.data, 'data', {
+            get() {
+              return res.data;
+            },
+            configurable: true,
+            enumerable: false
+          });
+        } catch (_) {}
+      }
+      return payload;
     }
 
     // 401 认证过期

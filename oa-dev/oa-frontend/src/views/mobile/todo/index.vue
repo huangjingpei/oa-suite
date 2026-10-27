@@ -141,13 +141,15 @@ const loadData = async () => {
   try {
     if (activeTab.value === 'pending') {
       const res: any = await getPendingTasksApi(1, 20);
-      if (res?.data?.data?.records) {
-        pendingList.value = res.data.data.records;
+      const records = res?.data?.records || res?.data?.data?.records;
+      if (records) {
+        pendingList.value = records;
       }
     } else {
       const res: any = await getHandledTasksApi(1, 20);
-      if (res?.data?.data?.records) {
-        handledList.value = res.data.data.records;
+      const records = res?.data?.records || res?.data?.data?.records;
+      if (records) {
+        handledList.value = records;
       }
     }
   } catch {

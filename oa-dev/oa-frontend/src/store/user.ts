@@ -26,8 +26,8 @@ export const useUserStore = defineStore('user', {
   },
   actions: {
     async login(dto: LoginDTO) {
-      const res = await loginApi(dto);
-      const data = res.data.data;
+      const res: any = await loginApi(dto);
+      const data = res?.data?.token ? res.data : (res?.data?.data || res?.data);
       this.token = data.token;
       this.roles = data.roles || [];
       this.permissions = data.permissions || [];
@@ -40,8 +40,8 @@ export const useUserStore = defineStore('user', {
     },
     async fetchProfile() {
       try {
-        const res = await getProfileApi();
-        this.userInfo = res.data.data;
+        const res: any = await getProfileApi();
+        this.userInfo = res?.data?.username ? res.data : (res?.data?.data || res?.data);
         if (this.userInfo?.permissions) {
           this.permissions = this.userInfo.permissions;
           localStorage.setItem('oa_perms', JSON.stringify(this.permissions));

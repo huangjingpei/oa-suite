@@ -59,8 +59,8 @@ const loadHistory = async () => {
   }
   loading.value = true;
   try {
-    const res = await getProcessHistoryApi(props.instId);
-    historyList.value = res.data.data || [];
+    const res: any = await getProcessHistoryApi(props.instId);
+    historyList.value = Array.isArray(res?.data) ? res.data : (res?.data?.data || []);
   } catch (e) {
     console.error('加载审批履历失败', e);
   } finally {

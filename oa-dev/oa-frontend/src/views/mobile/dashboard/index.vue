@@ -170,8 +170,9 @@ const loadTasks = async () => {
   loading.value = true;
   try {
     const res: any = await getPendingTasksApi(1, 5);
-    if (res?.data?.data?.records) {
-      pendingList.value = res.data.data.records;
+    const records = res?.data?.records || res?.data?.data?.records;
+    if (records) {
+      pendingList.value = records;
     }
   } catch {
     pendingList.value = [

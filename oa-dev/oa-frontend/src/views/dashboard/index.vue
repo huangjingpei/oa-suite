@@ -815,9 +815,9 @@ const handleViewDashboardNotice = async (notice: NoticeVO) => {
 const loadPendingTasks = async () => {
   pendingLoading.value = true;
   try {
-    const res = await getPendingTasksApi(pendingPage.value, 10);
-    pendingList.value = res.data.data.records || [];
-    pendingTotal.value = res.data.data.total || 0;
+    const res: any = await getPendingTasksApi(pendingPage.value, 10);
+    pendingList.value = res?.data?.records || res?.data?.data?.records || [];
+    pendingTotal.value = res?.data?.total || res?.data?.data?.total || 0;
   } catch (ignored) {
   } finally {
     pendingLoading.value = false;
@@ -828,9 +828,9 @@ const loadPendingTasks = async () => {
 const loadHandledTasks = async () => {
   handledLoading.value = true;
   try {
-    const res = await getHandledTasksApi(handledPage.value, 10);
-    handledList.value = res.data.data.records || [];
-    handledTotal.value = res.data.data.total || 0;
+    const res: any = await getHandledTasksApi(handledPage.value, 10);
+    handledList.value = res?.data?.records || res?.data?.data?.records || [];
+    handledTotal.value = res?.data?.total || res?.data?.data?.total || 0;
   } catch (ignored) {
   } finally {
     handledLoading.value = false;
@@ -841,9 +841,9 @@ const loadHandledTasks = async () => {
 const loadMySubmitted = async () => {
   submittedLoading.value = true;
   try {
-    const res = await getMySubmittedApi(submittedPage.value, 10);
-    submittedList.value = res.data.data.records || [];
-    submittedTotal.value = res.data.data.total || 0;
+    const res: any = await getMySubmittedApi(submittedPage.value, 10);
+    submittedList.value = res?.data?.records || res?.data?.data?.records || [];
+    submittedTotal.value = res?.data?.total || res?.data?.data?.total || 0;
   } catch (ignored) {
   } finally {
     submittedLoading.value = false;
