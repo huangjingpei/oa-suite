@@ -89,6 +89,7 @@ chmod +x build-all.sh
 9. **[08-全要素资产比对与系统迁移矩阵](oa-dev/docs/08-legacy-to-modern-comparison-matrix.md)**：老系统功能点 100% 映射与现代化提升对齐表。
 10. **[09-企微/钉钉/飞书审批待办机器人集成指南](oa-dev/docs/09-im-robot-notification-guide.md)**：IM 提醒配置与开放式 Webhook 实操。
 11. **[10-生产交付与双模式运维手册](oa-dev/docs/10-deployment-and-operations-guide.md)**：Docker-Compose 与宝塔面板详细落地部署与排障方案。
+12. **[11-客户私有化白标定制与OEM一键品牌重塑实操指南](oa-dev/docs/11-white-label-rebranding-guide.md)**：包含“启航”官方标准商业视觉示例规范与自动化白标重塑工具链。
 
 ---
 
