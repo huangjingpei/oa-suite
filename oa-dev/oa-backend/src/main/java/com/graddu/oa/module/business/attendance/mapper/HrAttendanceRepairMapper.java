@@ -1,0 +1,9 @@
+package com.graddu.oa.module.business.attendance.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.graddu.oa.module.business.attendance.entity.HrAttendanceRepair;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface HrAttendanceRepairMapper extends BaseMapper<HrAttendanceRepair> {
+}
