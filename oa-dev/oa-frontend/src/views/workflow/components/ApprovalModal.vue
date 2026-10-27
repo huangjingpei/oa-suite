@@ -126,7 +126,7 @@ watch(visible, (val) => {
 onMounted(async () => {
   try {
     const res = await listUserOptionsApi();
-    userOptions.value = res.data.data || [];
+    userOptions.value = res.data || [];
   } catch (ignored) {
   }
 });

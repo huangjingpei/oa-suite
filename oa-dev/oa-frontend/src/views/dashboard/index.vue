@@ -78,6 +78,45 @@
       </a-col>
     </a-row>
 
+    <!-- 常用协同事务快捷发起 -->
+    <a-card :bordered="false" style="margin-top: 16px" title="⚡ 常用协同事务快捷发起">
+      <template #extra>
+        <span style="font-size: 13px; color: #888">支持暂存草稿与一键启动流转审批</span>
+      </template>
+      <a-row :gutter="16">
+        <a-col :span="4">
+          <a-button block type="dashed" size="large" @click="leaveModalOpen = true">
+            <template #icon><CalendarOutlined style="color: #1677ff" /></template>
+            发起请假
+          </a-button>
+        </a-col>
+        <a-col :span="5">
+          <a-button block type="dashed" size="large" @click="repairModalOpen = true">
+            <template #icon><ClockCircleOutlined style="color: #52c41a" /></template>
+            异常漏卡补卡
+          </a-button>
+        </a-col>
+        <a-col :span="5">
+          <a-button block type="dashed" size="large" @click="sealModalOpen = true">
+            <template #icon><AuditOutlined style="color: #722ed1" /></template>
+            申请用印审批
+          </a-button>
+        </a-col>
+        <a-col :span="5">
+          <a-button block type="dashed" size="large" @click="redheadModalOpen = true">
+            <template #icon><FileDoneOutlined style="color: #f5222d" /></template>
+            起草红头公文
+          </a-button>
+        </a-col>
+        <a-col :span="5">
+          <a-button block type="dashed" size="large" @click="borrowModalOpen = true">
+            <template #icon><ReadOutlined style="color: #fa8c16" /></template>
+            借阅档案资料
+          </a-button>
+        </a-col>
+      </a-row>
+    </a-card>
+
     <!-- 工作台核心面板 (待办/已办/我发起的/通知) -->
     <a-card :bordered="false" style="margin-top: 16px">
       <a-tabs v-model:activeKey="activeTab" @change="handleTabChange">
@@ -236,6 +275,13 @@
     >
       <TimelineHistory :inst-id="currentTimelineInstId" />
     </a-modal>
+
+    <!-- 业务快捷发起弹窗 -->
+    <LeaveModal v-model:open="leaveModalOpen" @success="handleFormSuccess" />
+    <RepairModal v-model:open="repairModalOpen" @success="handleFormSuccess" />
+    <SealModal v-model:open="sealModalOpen" @success="handleFormSuccess" />
+    <RedheadModal v-model:open="redheadModalOpen" @success="handleFormSuccess" />
+    <BorrowModal v-model:open="borrowModalOpen" @success="handleFormSuccess" />
   </div>
 </template>
 
@@ -247,7 +293,11 @@ import {
   ClockCircleOutlined,
   CheckCircleOutlined,
   SendOutlined,
-  FileTextOutlined
+  FileTextOutlined,
+  CalendarOutlined,
+  AuditOutlined,
+  ReadOutlined,
+  FileDoneOutlined
 } from '@ant-design/icons-vue';
 import {
   getPendingTasksApi,
@@ -258,8 +308,25 @@ import {
 import type { TaskVO } from '@/types/workflow';
 import ApprovalModal from '@/views/workflow/components/ApprovalModal.vue';
 import TimelineHistory from '@/views/workflow/components/TimelineHistory.vue';
+import LeaveModal from '@/views/business/leave/components/LeaveModal.vue';
+import RepairModal from '@/views/business/attendance/components/RepairModal.vue';
+import SealModal from '@/views/business/seal/components/SealModal.vue';
+import RedheadModal from '@/views/business/redhead/components/RedheadModal.vue';
+import BorrowModal from '@/views/business/borrow/components/BorrowModal.vue';
 
 const userStore = useUserStore();
+
+// 快捷表单弹窗状态
+const leaveModalOpen = ref(false);
+const repairModalOpen = ref(false);
+const sealModalOpen = ref(false);
+const redheadModalOpen = ref(false);
+const borrowModalOpen = ref(false);
+
+const handleFormSuccess = () => {
+  loadPendingTasks();
+  loadMySubmitted();
+};
 
 const activeTab = ref('pending');
 

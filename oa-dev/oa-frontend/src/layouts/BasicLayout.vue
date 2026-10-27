@@ -68,8 +68,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, h, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/store/user';
 import {
   MenuFoldOutlined,
@@ -77,14 +77,15 @@ import {
   DashboardOutlined,
   FileDoneOutlined,
   CalendarOutlined,
+  ClockCircleOutlined,
   AuditOutlined,
   ReadOutlined,
-  SettingOutlined,
   LogoutOutlined
 } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 
 const collapsed = ref<boolean>(false);
@@ -94,17 +95,22 @@ const menuItems = ref([
   {
     key: 'dashboard',
     icon: () => h(DashboardOutlined),
-    label: '工作台与审批'
+    label: '协同工作台'
   },
   {
     key: 'leave',
     icon: () => h(CalendarOutlined),
-    label: '请假与考勤'
+    label: '请假与假期台账'
+  },
+  {
+    key: 'attendance',
+    icon: () => h(ClockCircleOutlined),
+    label: '考勤打卡与补卡'
   },
   {
     key: 'seal',
     icon: () => h(AuditOutlined),
-    label: '印章用印审批'
+    label: '企业用印审批'
   },
   {
     key: 'redhead',
@@ -115,19 +121,35 @@ const menuItems = ref([
     key: 'borrow',
     icon: () => h(ReadOutlined),
     label: '档案资料借阅'
-  },
-  {
-    key: 'system',
-    icon: () => h(SettingOutlined),
-    label: '组织与系统管理'
   }
 ]);
+
+watch(
+  () => route.path,
+  (path) => {
+    if (path.includes('business/leave')) selectedKeys.value = ['leave'];
+    else if (path.includes('business/attendance')) selectedKeys.value = ['attendance'];
+    else if (path.includes('business/seal')) selectedKeys.value = ['seal'];
+    else if (path.includes('business/redhead')) selectedKeys.value = ['redhead'];
+    else if (path.includes('business/borrow')) selectedKeys.value = ['borrow'];
+    else selectedKeys.value = ['dashboard'];
+  },
+  { immediate: true }
+);
 
 const handleMenuClick = ({ key }: { key: string }) => {
   if (key === 'dashboard') {
     router.push('/dashboard');
-  } else {
-    message.info('该业务模块已在工作台中集成快捷入口，也可在后续 M5 专用表单视图中打开');
+  } else if (key === 'leave') {
+    router.push('/business/leave');
+  } else if (key === 'attendance') {
+    router.push('/business/attendance');
+  } else if (key === 'seal') {
+    router.push('/business/seal');
+  } else if (key === 'redhead') {
+    router.push('/business/redhead');
+  } else if (key === 'borrow') {
+    router.push('/business/borrow');
   }
 };
 
