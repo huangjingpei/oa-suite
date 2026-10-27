@@ -12,7 +12,11 @@ import type {
   RedheadDocDTO,
   RedheadDocVO,
   RecordBorrowDTO,
-  RecordBorrowVO
+  RecordBorrowVO,
+  OvertimeApplyDTO,
+  OvertimeVO,
+  EgressApplyDTO,
+  EgressVO
 } from '@/types/business';
 
 // ==================== 1. 请假业务 (HR Leave) ====================
@@ -101,4 +105,32 @@ export function uploadFileApi(file: File) {
   return request.post<any, R<string>>('/common/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
+}
+
+// ==================== 7. 加班申报 (HR Overtime) ====================
+
+export function applyOvertimeApi(data: OvertimeApplyDTO) {
+  return request.post<any, R<number>>('/hr/overtime/apply', data);
+}
+
+export function getOvertimeDetailApi(id: number) {
+  return request.get<any, R<OvertimeVO>>(`/hr/overtime/detail/${id}`);
+}
+
+export function getMyOvertimesApi(params: { pageNum?: number; pageSize?: number }) {
+  return request.get<any, R<PageResult<OvertimeVO>>>('/hr/overtime/my', { params });
+}
+
+// ==================== 8. 外出公干/外勤报备 (HR Egress) ====================
+
+export function applyEgressApi(data: EgressApplyDTO) {
+  return request.post<any, R<number>>('/hr/egress/apply', data);
+}
+
+export function getEgressDetailApi(id: number) {
+  return request.get<any, R<EgressVO>>(`/hr/egress/detail/${id}`);
+}
+
+export function getMyEgressesApi(params: { pageNum?: number; pageSize?: number }) {
+  return request.get<any, R<PageResult<EgressVO>>>('/hr/egress/my', { params });
 }

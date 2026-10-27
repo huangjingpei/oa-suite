@@ -201,3 +201,65 @@ export interface RecordBorrowVO {
   procStatus: number;
   createTime: string;
 }
+
+// ==================== 6. 加班申报 (HR Overtime) ====================
+
+export interface OvertimeApplyDTO {
+  startTime: string;
+  endTime: string;
+  totalHours: number;
+  reason: string;
+  files?: string;
+  isDraft?: boolean;
+  auditUsernames?: string[];
+  notifyUsernames?: string[];
+}
+
+export interface OvertimeVO {
+  id: number;
+  overtimeNo: string;
+  applicantUsername: string;
+  applicantName: string;
+  deptName?: string;
+  startTime: string;
+  endTime: string;
+  totalHours: number;
+  reason: string;
+  files?: string;
+  procInstId?: number;
+  procStatus: number;
+  createTime: string;
+}
+
+// ==================== 7. 外出公干/外勤报备 (HR Egress) ====================
+
+export interface EgressApplyDTO {
+  startTime: string;
+  endTime: string;
+  location: string;
+  companions?: string;
+  totalHours: number;
+  reason: string;
+  files?: string;
+  isDraft?: boolean;
+  auditUsernames?: string[];
+  notifyUsernames?: string[];
+}
+
+export interface EgressVO {
+  id: number;
+  egressNo: string;
+  applicantUsername: string;
+  applicantName: string;
+  deptName?: string;
+  startTime: string;
+  endTime: string;
+  location: string;
+  companions?: string;
+  totalHours: number;
+  reason: string;
+  files?: string;
+  procInstId?: number;
+  procStatus: number;
+  createTime: string;
+}

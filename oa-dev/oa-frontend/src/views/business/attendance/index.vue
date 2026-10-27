@@ -4,13 +4,21 @@
       <div class="table-header">
         <div class="header-title">
           <ClockCircleOutlined style="color: #1677ff; margin-right: 8px" />
-          <span>考勤管理与异常漏卡补卡</span>
+          <span>考勤、加班与外出公干中枢</span>
         </div>
         <div class="header-actions">
           <a-space>
             <a-button type="primary" @click="repairModalVisible = true">
               <template #icon><PlusOutlined /></template>
-              发起漏卡补卡申请
+              发起漏卡补卡
+            </a-button>
+            <a-button @click="overtimeModalVisible = true">
+              <template #icon><FieldTimeOutlined /></template>
+              发起加班申报
+            </a-button>
+            <a-button @click="egressModalVisible = true">
+              <template #icon><SendOutlined /></template>
+              发起外出报备
             </a-button>
             <a-button @click="loadData">
               <template #icon><ReloadOutlined /></template>
@@ -20,7 +28,7 @@
         </div>
       </div>
 
-      <a-tabs v-model:activeKey="activeTab" style="margin-top: 16px">
+      <a-tabs v-model:activeKey="activeTab" style="margin-top: 16px" @change="handleTabChange">
         <!-- 页签 1: 异常补卡台账 -->
         <a-tab-pane key="repairs" tab="异常补卡申请台账">
           <a-table
@@ -32,7 +40,7 @@
               current: repairPage,
               pageSize: 10,
               total: repairTotal,
-              onChange: (p: number) => { repairPage = p; loadData(); }
+              onChange: (p: number) => { repairPage = p; loadRepairs(); }
             }"
           >
             <template #bodyCell="{ column, record }">
@@ -61,7 +69,7 @@
                   <a-button
                     type="link"
                     size="small"
-                    @click="openPrint(record)"
+                    @click="openRepairPrint(record)"
                   >
                     <PrinterOutlined /> 补卡单打印
                   </a-button>
@@ -71,7 +79,119 @@
           </a-table>
         </a-tab-pane>
 
-        <!-- 页签 2: 在线打卡与流水 -->
+        <!-- 页签 2: 员工加班申报台账 -->
+        <a-tab-pane key="overtimes" tab="员工加班申报台账">
+          <a-table
+            :columns="overtimeColumns"
+            :data-source="overtimeList"
+            :loading="overtimeLoading"
+            row-key="id"
+            :pagination="{
+              current: overtimePage,
+              pageSize: 10,
+              total: overtimeTotal,
+              onChange: (p: number) => { overtimePage = p; loadOvertimes(); }
+            }"
+          >
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'overtimeNo'">
+                <strong>{{ record.overtimeNo }}</strong>
+              </template>
+
+              <template v-else-if="column.key === 'totalHours'">
+                <a-tag color="blue">{{ record.totalHours }} 小时</a-tag>
+              </template>
+
+              <template v-else-if="column.key === 'procStatus'">
+                <a-tag v-if="record.procStatus === 0" color="default">草稿待发</a-tag>
+                <a-tag v-else-if="record.procStatus === 1" color="processing">审批中</a-tag>
+                <a-tag v-else-if="record.procStatus === 2" color="green">终审通过</a-tag>
+                <a-tag v-else-if="record.procStatus === 3" color="red">已驳回</a-tag>
+                <a-tag v-else color="gray">已作废</a-tag>
+              </template>
+
+              <template v-else-if="column.key === 'action'">
+                <a-space>
+                  <a-button
+                    v-if="record.procInstId"
+                    type="link"
+                    size="small"
+                    @click="viewTimeline(record.procInstId)"
+                  >
+                    流转轨迹
+                  </a-button>
+                  <a-button
+                    type="link"
+                    size="small"
+                    @click="openOvertimePrint(record)"
+                  >
+                    <PrinterOutlined /> 加班单打印
+                  </a-button>
+                </a-space>
+              </template>
+            </template>
+          </a-table>
+        </a-tab-pane>
+
+        <!-- 页签 3: 外出公干报备台账 -->
+        <a-tab-pane key="egresses" tab="外出公干报备台账">
+          <a-table
+            :columns="egressColumns"
+            :data-source="egressList"
+            :loading="egressLoading"
+            row-key="id"
+            :pagination="{
+              current: egressPage,
+              pageSize: 10,
+              total: egressTotal,
+              onChange: (p: number) => { egressPage = p; loadEgresses(); }
+            }"
+          >
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'egressNo'">
+                <strong>{{ record.egressNo }}</strong>
+              </template>
+
+              <template v-else-if="column.key === 'location'">
+                <a-tag color="cyan">{{ record.location }}</a-tag>
+              </template>
+
+              <template v-else-if="column.key === 'totalHours'">
+                <span>{{ record.totalHours }} 小时</span>
+              </template>
+
+              <template v-else-if="column.key === 'procStatus'">
+                <a-tag v-if="record.procStatus === 0" color="default">草稿待发</a-tag>
+                <a-tag v-else-if="record.procStatus === 1" color="processing">审批中</a-tag>
+                <a-tag v-else-if="record.procStatus === 2" color="green">审批通过</a-tag>
+                <a-tag v-else-if="record.procStatus === 3" color="red">已驳回</a-tag>
+                <a-tag v-else color="gray">已作废</a-tag>
+              </template>
+
+              <template v-else-if="column.key === 'action'">
+                <a-space>
+                  <a-button
+                    v-if="record.procInstId"
+                    type="link"
+                    size="small"
+                    @click="viewTimeline(record.procInstId)"
+                  >
+                    流转轨迹
+                  </a-button>
+                  <a-button
+                    type="link"
+                    size="small"
+                    @click="openEgressPrint(record)"
+                  >
+                    <PrinterOutlined /> 外出凭证打印
+                  </a-button>
+                </a-space>
+              </template>
+            </template>
+          </a-table>
+        </a-tab-pane>
+
+        <!-- 页签 4: 在线打卡与流水 -->
         <a-tab-pane key="clock" tab="在线考勤打卡与打卡流水">
           <div class="clock-action-bar">
             <a-card size="small" class="clock-card">
@@ -117,24 +237,38 @@
       </a-tabs>
     </a-card>
 
-    <!-- 补卡弹窗 -->
+    <!-- 弹窗 1: 异常补卡弹窗 -->
     <RepairModal
       v-model:open="repairModalVisible"
-      @success="loadData"
+      @success="loadRepairs"
+    />
+
+    <!-- 弹窗 2: 加班申报弹窗 -->
+    <OvertimeModal
+      v-model:open="overtimeModalVisible"
+      @success="loadOvertimes"
+    />
+
+    <!-- 弹窗 3: 外出报备弹窗 -->
+    <EgressModal
+      v-model:open="egressModalVisible"
+      @success="loadEgresses"
     />
 
     <!-- A4 纸质打印预览弹窗 -->
     <PrintModal
       v-model:open="printModalVisible"
-      title="考勤异常补卡审批单 - A4 纸质高保真排版"
+      :title="printTitle"
     >
-      <RepairPrint :repair="currentRecord || {}" />
+      <RepairPrint v-if="printType === 'repair'" :repair="currentRepair || {}" />
+      <OvertimePrint v-else-if="printType === 'overtime'" :overtime="currentOvertime || {}" />
+      <EgressPrint v-else-if="printType === 'egress'" :egress="currentEgress || {}" />
     </PrintModal>
 
     <!-- 审批履历时间轴弹窗 -->
     <a-modal
       v-model:open="timelineModalVisible"
-      title="补卡审批流转履历"
+      title="审批流转轨迹与履历"
       :footer="null"
       width="600px"
     >
@@ -150,17 +284,25 @@ import {
   ClockCircleOutlined,
   PlusOutlined,
   ReloadOutlined,
-  PrinterOutlined
+  PrinterOutlined,
+  FieldTimeOutlined,
+  SendOutlined
 } from '@ant-design/icons-vue';
 import dayjs from 'dayjs';
 import {
   getMyRepairsApi,
   getMyClockRecordsApi,
-  clockInApi
+  clockInApi,
+  getMyOvertimesApi,
+  getMyEgressesApi
 } from '@/api/business';
-import type { AttendanceRepairVO, ClockRecordVO } from '@/types/business';
+import type { AttendanceRepairVO, ClockRecordVO, OvertimeVO, EgressVO } from '@/types/business';
 import RepairModal from './components/RepairModal.vue';
 import RepairPrint from './components/RepairPrint.vue';
+import OvertimeModal from './components/OvertimeModal.vue';
+import OvertimePrint from './components/OvertimePrint.vue';
+import EgressModal from './components/EgressModal.vue';
+import EgressPrint from './components/EgressPrint.vue';
 import PrintModal from '@/components/print/PrintModal.vue';
 import TimelineHistory from '@/views/workflow/components/TimelineHistory.vue';
 
@@ -172,6 +314,18 @@ const repairList = ref<AttendanceRepairVO[]>([]);
 const repairTotal = ref(0);
 const repairPage = ref(1);
 
+// 加班状态
+const overtimeLoading = ref(false);
+const overtimeList = ref<OvertimeVO[]>([]);
+const overtimeTotal = ref(0);
+const overtimePage = ref(1);
+
+// 外出状态
+const egressLoading = ref(false);
+const egressList = ref<EgressVO[]>([]);
+const egressTotal = ref(0);
+const egressPage = ref(1);
+
 // 打卡状态
 const clockLoading = ref(false);
 const clockList = ref<ClockRecordVO[]>([]);
@@ -181,9 +335,16 @@ let timeTimer: any = null;
 
 // 弹窗状态
 const repairModalVisible = ref(false);
+const overtimeModalVisible = ref(false);
+const egressModalVisible = ref(false);
 const printModalVisible = ref(false);
 const timelineModalVisible = ref(false);
-const currentRecord = ref<AttendanceRepairVO | null>(null);
+
+const printType = ref<'repair' | 'overtime' | 'egress'>('repair');
+const printTitle = ref('A4 纸质高保真排版');
+const currentRepair = ref<AttendanceRepairVO | null>(null);
+const currentOvertime = ref<OvertimeVO | null>(null);
+const currentEgress = ref<EgressVO | null>(null);
 const currentInstId = ref<number | undefined>(undefined);
 
 const repairColumns = [
@@ -197,6 +358,30 @@ const repairColumns = [
   { title: '操作', key: 'action', width: 200, align: 'center' as const }
 ];
 
+const overtimeColumns = [
+  { title: '加班单流水号', dataIndex: 'overtimeNo', key: 'overtimeNo', width: 170 },
+  { title: '申请人', dataIndex: 'applicantName', key: 'applicantName', width: 120 },
+  { title: '所属部门', dataIndex: 'deptName', key: 'deptName', width: 140 },
+  { title: '加班开始时间', dataIndex: 'startTime', key: 'startTime', width: 160 },
+  { title: '加班结束时间', dataIndex: 'endTime', key: 'endTime', width: 160 },
+  { title: '核算工时', dataIndex: 'totalHours', key: 'totalHours', width: 110 },
+  { title: '工作任务事由', dataIndex: 'reason', key: 'reason' },
+  { title: '流转状态', dataIndex: 'procStatus', key: 'procStatus', width: 110 },
+  { title: '操作', key: 'action', width: 200, align: 'center' as const }
+];
+
+const egressColumns = [
+  { title: '外出单流水号', dataIndex: 'egressNo', key: 'egressNo', width: 170 },
+  { title: '外勤人员', dataIndex: 'applicantName', key: 'applicantName', width: 120 },
+  { title: '所属部门', dataIndex: 'deptName', key: 'deptName', width: 140 },
+  { title: '外勤起止时段', dataIndex: 'startTime', key: 'startTime', width: 160 },
+  { title: '外出地点/单位', dataIndex: 'location', key: 'location', width: 180 },
+  { title: '折算工时', dataIndex: 'totalHours', key: 'totalHours', width: 100 },
+  { title: '外出工作事由', dataIndex: 'reason', key: 'reason' },
+  { title: '审批状态', dataIndex: 'procStatus', key: 'procStatus', width: 110 },
+  { title: '操作', key: 'action', width: 200, align: 'center' as const }
+];
+
 const clockColumns = [
   { title: '打卡姓名', dataIndex: 'realName', key: 'realName', width: 120 },
   { title: '打卡类型', dataIndex: 'clockType', key: 'clockType', width: 110 },
@@ -206,65 +391,73 @@ const clockColumns = [
   { title: '考勤状态', dataIndex: 'status', key: 'status', width: 110 }
 ];
 
-const loadData = async () => {
+const loadRepairs = async () => {
   repairLoading.value = true;
-  clockLoading.value = true;
   try {
     const res = await getMyRepairsApi({ pageNum: repairPage.value, pageSize: 10 });
     if (res.code === 200 && res.data) {
       repairList.value = res.data.records || [];
       repairTotal.value = res.data.total || 0;
     }
-  } catch {
-    repairList.value = [
-      {
-        id: 2,
-        repairNo: 'BK202610280002',
-        applicantUsername: 'zhangsan',
-        applicantName: '张三',
-        deptName: '研发中心',
-        reason: '因外出参加行业技术交流会，现场无法连入办公WiFi指纹签到。',
-        totalCount: 1,
-        procInstId: 1002,
-        procStatus: 2,
-        createTime: '2026-10-28 09:15:00',
-        details: [
-          {
-            repairDate: '2026-10-28',
-            repairType: 'CHECK_IN',
-            repairSignTime: '2026-10-28 09:00:00',
-            remark: '外出交流会开幕现场签到'
-          }
-        ]
-      }
-    ];
-    repairTotal.value = 1;
+  } catch (ignored) {
   } finally {
     repairLoading.value = false;
   }
+};
 
+const loadOvertimes = async () => {
+  overtimeLoading.value = true;
+  try {
+    const res = await getMyOvertimesApi({ pageNum: overtimePage.value, pageSize: 10 });
+    if (res.code === 200 && res.data) {
+      overtimeList.value = res.data.records || [];
+      overtimeTotal.value = res.data.total || 0;
+    }
+  } catch (ignored) {
+  } finally {
+    overtimeLoading.value = false;
+  }
+};
+
+const loadEgresses = async () => {
+  egressLoading.value = true;
+  try {
+    const res = await getMyEgressesApi({ pageNum: egressPage.value, pageSize: 10 });
+    if (res.code === 200 && res.data) {
+      egressList.value = res.data.records || [];
+      egressTotal.value = res.data.total || 0;
+    }
+  } catch (ignored) {
+  } finally {
+    egressLoading.value = false;
+  }
+};
+
+const loadClock = async () => {
+  clockLoading.value = true;
   try {
     const cRes = await getMyClockRecordsApi({ pageNum: 1, pageSize: 10 });
     if (cRes.code === 200 && cRes.data) {
       clockList.value = cRes.data.records || [];
     }
-  } catch {
-    clockList.value = [
-      {
-        id: 101,
-        username: 'zhangsan',
-        realName: '张三',
-        deptName: '研发中心',
-        clockType: 'ON',
-        clockTime: '2026-10-28 08:55:12',
-        deviceType: 'WEB',
-        locationAddress: '盛泰集团总部研发园区 (192.168.1.105)',
-        status: 0
-      }
-    ];
+  } catch (ignored) {
   } finally {
     clockLoading.value = false;
   }
+};
+
+const loadData = () => {
+  loadRepairs();
+  loadOvertimes();
+  loadEgresses();
+  loadClock();
+};
+
+const handleTabChange = (key: string) => {
+  if (key === 'repairs') loadRepairs();
+  else if (key === 'overtimes') loadOvertimes();
+  else if (key === 'egresses') loadEgresses();
+  else if (key === 'clock') loadClock();
 };
 
 const handleClock = async (type: 'ON' | 'OFF') => {
@@ -277,7 +470,7 @@ const handleClock = async (type: 'ON' | 'OFF') => {
     });
     if (res.code === 200) {
       message.success(type === 'ON' ? '上班签到成功！' : '下班签退成功！');
-      loadData();
+      loadClock();
     }
   } catch (err: any) {
     if (err?.message) message.error(err.message);
@@ -286,8 +479,24 @@ const handleClock = async (type: 'ON' | 'OFF') => {
   }
 };
 
-const openPrint = (record: AttendanceRepairVO) => {
-  currentRecord.value = record;
+const openRepairPrint = (record: AttendanceRepairVO) => {
+  currentRepair.value = record;
+  printType.value = 'repair';
+  printTitle.value = '考勤异常补卡审批单 - A4 纸质高保真排版';
+  printModalVisible.value = true;
+};
+
+const openOvertimePrint = (record: OvertimeVO) => {
+  currentOvertime.value = record;
+  printType.value = 'overtime';
+  printTitle.value = '员工加班申报审批单 - A4 纸质高保真排版';
+  printModalVisible.value = true;
+};
+
+const openEgressPrint = (record: EgressVO) => {
+  currentEgress.value = record;
+  printType.value = 'egress';
+  printTitle.value = '员工外出公干审批凭证 - A4 纸质高保真排版';
   printModalVisible.value = true;
 };
 

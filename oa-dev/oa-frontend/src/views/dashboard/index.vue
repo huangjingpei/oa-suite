@@ -83,35 +83,47 @@
       <template #extra>
         <span style="font-size: 13px; color: #888">支持暂存草稿与一键启动流转审批</span>
       </template>
-      <a-row :gutter="16">
-        <a-col :span="4">
+      <a-row :gutter="[12, 12]">
+        <a-col :xs="12" :sm="8" :md="6" :lg="3">
           <a-button block type="dashed" size="large" @click="leaveModalOpen = true">
             <template #icon><CalendarOutlined style="color: #1677ff" /></template>
             发起请假
           </a-button>
         </a-col>
-        <a-col :span="5">
+        <a-col :xs="12" :sm="8" :md="6" :lg="3">
           <a-button block type="dashed" size="large" @click="repairModalOpen = true">
             <template #icon><ClockCircleOutlined style="color: #52c41a" /></template>
-            异常漏卡补卡
+            漏卡补卡
           </a-button>
         </a-col>
-        <a-col :span="5">
+        <a-col :xs="12" :sm="8" :md="6" :lg="3">
+          <a-button block type="dashed" size="large" @click="overtimeModalOpen = true">
+            <template #icon><FieldTimeOutlined style="color: #fa8c16" /></template>
+            申报加班
+          </a-button>
+        </a-col>
+        <a-col :xs="12" :sm="8" :md="6" :lg="3">
+          <a-button block type="dashed" size="large" @click="egressModalOpen = true">
+            <template #icon><SendOutlined style="color: #13c2c2" /></template>
+            外勤报备
+          </a-button>
+        </a-col>
+        <a-col :xs="12" :sm="8" :md="6" :lg="4">
           <a-button block type="dashed" size="large" @click="sealModalOpen = true">
             <template #icon><AuditOutlined style="color: #722ed1" /></template>
-            申请用印审批
+            申请用印
           </a-button>
         </a-col>
-        <a-col :span="5">
+        <a-col :xs="12" :sm="8" :md="6" :lg="4">
           <a-button block type="dashed" size="large" @click="redheadModalOpen = true">
             <template #icon><FileDoneOutlined style="color: #f5222d" /></template>
-            起草红头公文
+            起草公文
           </a-button>
         </a-col>
-        <a-col :span="5">
+        <a-col :xs="12" :sm="8" :md="6" :lg="4">
           <a-button block type="dashed" size="large" @click="borrowModalOpen = true">
-            <template #icon><ReadOutlined style="color: #fa8c16" /></template>
-            借阅档案资料
+            <template #icon><ReadOutlined style="color: #eb2f96" /></template>
+            借阅档案
           </a-button>
         </a-col>
       </a-row>
@@ -279,6 +291,8 @@
     <!-- 业务快捷发起弹窗 -->
     <LeaveModal v-model:open="leaveModalOpen" @success="handleFormSuccess" />
     <RepairModal v-model:open="repairModalOpen" @success="handleFormSuccess" />
+    <OvertimeModal v-model:open="overtimeModalOpen" @success="handleFormSuccess" />
+    <EgressModal v-model:open="egressModalOpen" @success="handleFormSuccess" />
     <SealModal v-model:open="sealModalOpen" @success="handleFormSuccess" />
     <RedheadModal v-model:open="redheadModalOpen" @success="handleFormSuccess" />
     <BorrowModal v-model:open="borrowModalOpen" @success="handleFormSuccess" />
@@ -297,7 +311,8 @@ import {
   CalendarOutlined,
   AuditOutlined,
   ReadOutlined,
-  FileDoneOutlined
+  FileDoneOutlined,
+  FieldTimeOutlined
 } from '@ant-design/icons-vue';
 import {
   getPendingTasksApi,
@@ -310,6 +325,8 @@ import ApprovalModal from '@/views/workflow/components/ApprovalModal.vue';
 import TimelineHistory from '@/views/workflow/components/TimelineHistory.vue';
 import LeaveModal from '@/views/business/leave/components/LeaveModal.vue';
 import RepairModal from '@/views/business/attendance/components/RepairModal.vue';
+import OvertimeModal from '@/views/business/attendance/components/OvertimeModal.vue';
+import EgressModal from '@/views/business/attendance/components/EgressModal.vue';
 import SealModal from '@/views/business/seal/components/SealModal.vue';
 import RedheadModal from '@/views/business/redhead/components/RedheadModal.vue';
 import BorrowModal from '@/views/business/borrow/components/BorrowModal.vue';
@@ -319,6 +336,8 @@ const userStore = useUserStore();
 // 快捷表单弹窗状态
 const leaveModalOpen = ref(false);
 const repairModalOpen = ref(false);
+const overtimeModalOpen = ref(false);
+const egressModalOpen = ref(false);
 const sealModalOpen = ref(false);
 const redheadModalOpen = ref(false);
 const borrowModalOpen = ref(false);
