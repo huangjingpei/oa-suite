@@ -19,6 +19,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/dashboard/index.vue'),
         meta: { title: '工作台与审批中枢' }
       },
+      // 业务中心
       {
         path: 'business/leave',
         name: 'LeaveManagement',
@@ -48,6 +49,31 @@ const routes: RouteRecordRaw[] = [
         name: 'BorrowManagement',
         component: () => import('@/views/business/borrow/index.vue'),
         meta: { title: '档案资料借阅台账' }
+      },
+      // 系统组织管理
+      {
+        path: 'system/dept',
+        name: 'DeptManagement',
+        component: () => import('@/views/system/dept/index.vue'),
+        meta: { title: '组织架构与部门管理' }
+      },
+      {
+        path: 'system/user',
+        name: 'UserManagement',
+        component: () => import('@/views/system/user/index.vue'),
+        meta: { title: '员工与用户管理' }
+      },
+      {
+        path: 'system/role',
+        name: 'RoleManagement',
+        component: () => import('@/views/system/role/index.vue'),
+        meta: { title: '角色与权限体系 (RBAC)' }
+      },
+      {
+        path: 'system/dict',
+        name: 'DictManagement',
+        component: () => import('@/views/system/dict/index.vue'),
+        meta: { title: '系统数据字典中心' }
       }
     ]
   },

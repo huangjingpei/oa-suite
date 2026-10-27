@@ -28,6 +28,9 @@ export interface UserVO {
   gender?: number;
   avatar?: string;
   status: number;
+  createTime?: string;
+  roleIds?: number[];
+  roleNames?: string[];
 }
 
 export interface DeptNode {

@@ -80,6 +80,11 @@ import {
   ClockCircleOutlined,
   AuditOutlined,
   ReadOutlined,
+  SettingOutlined,
+  ApartmentOutlined,
+  TeamOutlined,
+  SafetyCertificateOutlined,
+  BookOutlined,
   LogoutOutlined
 } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
@@ -121,6 +126,33 @@ const menuItems = ref([
     key: 'borrow',
     icon: () => h(ReadOutlined),
     label: '档案资料借阅'
+  },
+  {
+    key: 'system',
+    icon: () => h(SettingOutlined),
+    label: '组织与系统管理',
+    children: [
+      {
+        key: 'dept',
+        icon: () => h(ApartmentOutlined),
+        label: '部门架构维护'
+      },
+      {
+        key: 'user',
+        icon: () => h(TeamOutlined),
+        label: '员工用户管理'
+      },
+      {
+        key: 'role',
+        icon: () => h(SafetyCertificateOutlined),
+        label: '角色权限体系'
+      },
+      {
+        key: 'dict',
+        icon: () => h(BookOutlined),
+        label: '数据字典中心'
+      }
+    ]
   }
 ]);
 
@@ -132,6 +164,10 @@ watch(
     else if (path.includes('business/seal')) selectedKeys.value = ['seal'];
     else if (path.includes('business/redhead')) selectedKeys.value = ['redhead'];
     else if (path.includes('business/borrow')) selectedKeys.value = ['borrow'];
+    else if (path.includes('system/dept')) selectedKeys.value = ['dept'];
+    else if (path.includes('system/user')) selectedKeys.value = ['user'];
+    else if (path.includes('system/role')) selectedKeys.value = ['role'];
+    else if (path.includes('system/dict')) selectedKeys.value = ['dict'];
     else selectedKeys.value = ['dashboard'];
   },
   { immediate: true }
@@ -150,6 +186,14 @@ const handleMenuClick = ({ key }: { key: string }) => {
     router.push('/business/redhead');
   } else if (key === 'borrow') {
     router.push('/business/borrow');
+  } else if (key === 'dept') {
+    router.push('/system/dept');
+  } else if (key === 'user') {
+    router.push('/system/user');
+  } else if (key === 'role') {
+    router.push('/system/role');
+  } else if (key === 'dict') {
+    router.push('/system/dict');
   }
 };
 

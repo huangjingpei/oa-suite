@@ -41,4 +41,8 @@ public class PageResult<T> implements Serializable {
                 page.getSize()
         );
     }
+
+    public static <T> PageResult<T> of(List<T> records, long total, long pageNum, long pageSize) {
+        return new PageResult<>(records, total, pageNum, pageSize);
+    }
 }
