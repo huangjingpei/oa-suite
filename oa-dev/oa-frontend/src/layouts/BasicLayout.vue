@@ -35,6 +35,9 @@
         </div>
 
         <div class="header-right">
+          <a-button type="link" size="small" @click="router.push('/m/dashboard')">
+            <MobileOutlined /> 移动端H5视图
+          </a-button>
           <a-tag v-if="userStore.userInfo?.deptName" color="blue">
             {{ userStore.userInfo?.deptName }}
           </a-tag>
@@ -85,6 +88,7 @@ import {
   TeamOutlined,
   SafetyCertificateOutlined,
   BookOutlined,
+  MobileOutlined,
   LogoutOutlined
 } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import BasicLayout from '@/layouts/BasicLayout.vue';
+import MobileLayout from '@/layouts/MobileLayout.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -8,6 +9,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/login/index.vue'),
     meta: { title: '企业登录门户 - OA Suite' }
   },
+  // 电脑端后台路由 (PC Web)
   {
     path: '/',
     component: BasicLayout,
@@ -74,6 +76,50 @@ const routes: RouteRecordRaw[] = [
         name: 'DictManagement',
         component: () => import('@/views/system/dict/index.vue'),
         meta: { title: '系统数据字典中心' }
+      }
+    ]
+  },
+  // 移动端 H5 专版路由 (Mobile H5)
+  {
+    path: '/m',
+    component: MobileLayout,
+    redirect: '/m/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        name: 'MobileDashboard',
+        component: () => import('@/views/mobile/dashboard/index.vue'),
+        meta: { title: '移动协同工作台' }
+      },
+      {
+        path: 'clock',
+        name: 'MobileClock',
+        component: () => import('@/views/mobile/clock/index.vue'),
+        meta: { title: '移动考勤打卡' }
+      },
+      {
+        path: 'todo',
+        name: 'MobileTodo',
+        component: () => import('@/views/mobile/todo/index.vue'),
+        meta: { title: '移动待办审批' }
+      },
+      {
+        path: 'profile',
+        name: 'MobileProfile',
+        component: () => import('@/views/mobile/profile/index.vue'),
+        meta: { title: '个人信息中心' }
+      },
+      {
+        path: 'apply/leave',
+        name: 'MobileApplyLeave',
+        component: () => import('@/views/mobile/apply/leave.vue'),
+        meta: { title: '移动快速请假' }
+      },
+      {
+        path: 'apply/seal',
+        name: 'MobileApplySeal',
+        component: () => import('@/views/mobile/apply/seal.vue'),
+        meta: { title: '移动快速用印' }
       }
     ]
   },
