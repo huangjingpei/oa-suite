@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.graddu.oa.common.exception.BusinessException;
 import com.graddu.oa.module.system.dto.RoleDTO;
 import com.graddu.oa.module.system.entity.SysRole;
+import com.graddu.oa.module.system.entity.SysRolePermission;
 import com.graddu.oa.module.system.entity.SysUserRole;
 import com.graddu.oa.module.system.mapper.SysRoleMapper;
+import com.graddu.oa.module.system.mapper.SysRolePermissionMapper;
 import com.graddu.oa.module.system.mapper.SysUserRoleMapper;
 import com.graddu.oa.module.system.service.SysRoleService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.List;
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements SysRoleService {
 
     private final SysUserRoleMapper userRoleMapper;
+    private final SysRolePermissionMapper rolePermissionMapper;
 
     @Override
     public List<SysRole> listAllRoles() {
@@ -72,6 +75,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         if (userCount > 0) {
             throw new BusinessException("该角色下仍绑定有系统员工，请先解绑后再删除");
         }
+        rolePermissionMapper.delete(new LambdaQueryWrapper<SysRolePermission>().eq(SysRolePermission::getRoleId, roleId));
         removeById(roleId);
     }
 }

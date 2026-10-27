@@ -170,3 +170,35 @@ export function updateDictDataApi(data: DictDataItem) {
 export function deleteDictDataApi(id: number) {
   return request.delete<any, R<boolean>>(`/sys/dict/data/${id}`);
 }
+
+// ==================== 5. 系统菜单与操作权限 (Permission) ====================
+
+export interface PermissionTreeItem {
+  id: number;
+  parentId: number;
+  name: string;
+  perms?: string;
+  menuType: number; // 1: 目录, 2: 菜单, 3: 按钮
+  icon?: string;
+  sortOrder: number;
+  status: number;
+  children?: PermissionTreeItem[];
+}
+
+export interface RolePermissionAssignDTO {
+  roleId: number;
+  permissionIds: number[];
+}
+
+export function getPermissionTreeApi() {
+  return request.get<any, R<PermissionTreeItem[]>>('/sys/permission/tree');
+}
+
+export function getRolePermissionIdsApi(roleId: number) {
+  return request.get<any, R<number[]>>(`/sys/permission/role/${roleId}`);
+}
+
+export function assignRolePermissionsApi(data: RolePermissionAssignDTO) {
+  return request.post<any, R<boolean>>('/sys/permission/assign', data);
+}
+

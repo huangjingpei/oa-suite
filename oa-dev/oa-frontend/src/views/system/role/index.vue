@@ -45,7 +45,8 @@
           <template v-else-if="column.key === 'action'">
             <a-space>
               <a-button type="link" size="small" @click="openPermModal(record)">
-                权限配置
+                <template #icon><SafetyCertificateOutlined /></template>
+                分配权限
               </a-button>
               <a-button type="link" size="small" @click="openEditModal(record)">
                 编辑
@@ -105,28 +106,64 @@
       </a-form>
     </a-modal>
 
-    <!-- 权限树配置弹窗 -->
+    <!-- 权限树配置可视化弹窗 -->
     <a-modal
       v-model:open="permModalVisible"
-      :title="`权限分配 - ${currentRole?.roleName || ''}`"
-      width="500px"
+      :title="`角色权限授权分配 - [${currentRole?.roleName || ''}]`"
+      width="640px"
+      :confirm-loading="savingPerms"
       @ok="handleSavePerms"
     >
-      <div style="margin-bottom: 12px; color: #666; font-size: 13px">
-        勾选为该角色开放的协同平台功能菜单与审批中枢模块：
-      </div>
-      <a-tree
-        v-model:checkedKeys="checkedPermKeys"
-        checkable
-        default-expand-all
-        :tree-data="permTreeData"
+      <a-alert
+        message="授权说明"
+        description="勾选为该角色开放的协同中枢目录、功能菜单及按钮操作权限；保存后关联用户实时生效。"
+        type="info"
+        show-icon
+        style="margin-bottom: 16px"
       />
+
+      <div class="perm-tree-toolbar">
+        <a-space>
+          <a-button size="small" @click="handleExpandAll(true)">展开全部</a-button>
+          <a-button size="small" @click="handleExpandAll(false)">折叠全部</a-button>
+          <a-button size="small" @click="handleSelectAll(true)">全选所有</a-button>
+          <a-button size="small" @click="handleSelectAll(false)">清空选择</a-button>
+        </a-space>
+        <div class="perm-count-badge">
+          已选中 <b>{{ currentSelectedCount }}</b> 项权限
+        </div>
+      </div>
+
+      <a-spin :spinning="loadingPermTree">
+        <div class="perm-tree-container">
+          <a-tree
+            v-if="permTreeData.length > 0"
+            v-model:checkedKeys="checkedPermKeys"
+            v-model:expandedKeys="expandedPermKeys"
+            checkable
+            :tree-data="permTreeData"
+            :field-names="{ title: 'name', key: 'id', children: 'children' }"
+            @check="onTreeCheck"
+          >
+            <template #title="{ name, perms, menuType }">
+              <span class="perm-tree-node">
+                <a-tag v-if="menuType === 1" color="blue" size="small">目录</a-tag>
+                <a-tag v-else-if="menuType === 2" color="cyan" size="small">菜单</a-tag>
+                <a-tag v-else color="purple" size="small">按钮</a-tag>
+                <span class="perm-node-name">{{ name }}</span>
+                <span v-if="perms" class="perm-node-code">{{ perms }}</span>
+              </span>
+            </template>
+          </a-tree>
+          <a-empty v-else description="暂无可分配的权限数据" />
+        </div>
+      </a-spin>
     </a-modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import {
   SafetyCertificateOutlined,
@@ -138,7 +175,11 @@ import {
   createRoleApi,
   updateRoleApi,
   deleteRoleApi,
-  type RoleItem
+  getPermissionTreeApi,
+  getRolePermissionIdsApi,
+  assignRolePermissionsApi,
+  type RoleItem,
+  type PermissionTreeItem
 } from '@/api/system';
 
 const loading = ref(false);
@@ -149,48 +190,14 @@ const modalVisible = ref(false);
 const modalMode = ref<'create' | 'edit'>('create');
 const currentRole = ref<RoleItem | null>(null);
 
+// 权限分配弹窗相关状态
 const permModalVisible = ref(false);
-const checkedPermKeys = ref<string[]>([
-  'dashboard', 'leave:view', 'attendance:view', 'seal:view', 'redhead:view', 'borrow:view'
-]);
-
-const permTreeData = [
-  {
-    title: '协同办公中枢',
-    key: 'dashboard_module',
-    children: [
-      { title: '工作台审批总览 (Dashboard)', key: 'dashboard' },
-      { title: '待办审批处理与加签 (WfApprove)', key: 'wf:approve' }
-    ]
-  },
-  {
-    title: '人事与考勤中心 (HR)',
-    key: 'hr_module',
-    children: [
-      { title: '请假台账与审批单打印', key: 'leave:view' },
-      { title: '异常补卡与打卡流水', key: 'attendance:view' }
-    ]
-  },
-  {
-    title: '行政与公文中心 (ADM)',
-    key: 'adm_module',
-    children: [
-      { title: '企业用印审批签报', key: 'seal:view' },
-      { title: '红头公文拟稿与签发', key: 'redhead:view' },
-      { title: '档案资料借阅出库', key: 'borrow:view' }
-    ]
-  },
-  {
-    title: '组织与系统管理 (SYS)',
-    key: 'sys_module',
-    children: [
-      { title: '部门架构维护 (Dept)', key: 'sys:dept' },
-      { title: '员工用户管理 (User)', key: 'sys:user' },
-      { title: '角色权限体系 (Role)', key: 'sys:role' },
-      { title: '数据字典中心 (Dict)', key: 'sys:dict' }
-    ]
-  }
-];
+const loadingPermTree = ref(false);
+const savingPerms = ref(false);
+const permTreeData = ref<PermissionTreeItem[]>([]);
+const checkedPermKeys = ref<number[]>([]);
+const expandedPermKeys = ref<number[]>([]);
+const halfCheckedPermKeys = ref<number[]>([]);
 
 const formData = reactive<RoleItem>({
   id: undefined,
@@ -202,13 +209,65 @@ const formData = reactive<RoleItem>({
 });
 
 const columns = [
-  { title: '角色编码', dataIndex: 'roleCode', key: 'roleCode', width: 150 },
-  { title: '角色名称', dataIndex: 'roleName', key: 'roleName', width: 160 },
-  { title: '角色描述说明', dataIndex: 'description', key: 'description' },
+  { title: '角色编码', dataIndex: 'roleCode', key: 'roleCode', width: 160 },
+  { title: '角色名称', dataIndex: 'roleName', key: 'roleName', width: 180 },
+  { title: '角色职责描述', dataIndex: 'description', key: 'description' },
   { title: '排序', dataIndex: 'sortOrder', key: 'sortOrder', width: 80, align: 'center' as const },
   { title: '状态', dataIndex: 'status', key: 'status', width: 100, align: 'center' as const },
-  { title: '操作', key: 'action', width: 200, align: 'center' as const }
+  { title: '操作', key: 'action', width: 220, align: 'center' as const }
 ];
+
+// 计算选中的权限总数
+const currentSelectedCount = computed(() => {
+  return checkedPermKeys.value.length;
+});
+
+// 提取所有节点ID
+const getAllNodeIds = (nodes: PermissionTreeItem[]): number[] => {
+  const ids: number[] = [];
+  const traverse = (list: PermissionTreeItem[]) => {
+    for (const item of list) {
+      ids.push(item.id);
+      if (item.children && item.children.length > 0) {
+        traverse(item.children);
+      }
+    }
+  };
+  traverse(nodes);
+  return ids;
+};
+
+// 展开/折叠全部
+const handleExpandAll = (expand: boolean) => {
+  if (expand) {
+    expandedPermKeys.value = getAllNodeIds(permTreeData.value);
+  } else {
+    expandedPermKeys.value = [];
+  }
+};
+
+// 全选/清空
+const handleSelectAll = (select: boolean) => {
+  if (select) {
+    checkedPermKeys.value = getAllNodeIds(permTreeData.value);
+    halfCheckedPermKeys.value = [];
+  } else {
+    checkedPermKeys.value = [];
+    halfCheckedPermKeys.value = [];
+  }
+};
+
+// 树选中变化回调
+const onTreeCheck = (checked: any, e: any) => {
+  if (Array.isArray(checked)) {
+    checkedPermKeys.value = checked;
+  } else if (checked?.checked) {
+    checkedPermKeys.value = checked.checked;
+  }
+  if (e?.halfCheckedKeys) {
+    halfCheckedPermKeys.value = e.halfCheckedKeys;
+  }
+};
 
 const loadData = async () => {
   loading.value = true;
@@ -217,13 +276,8 @@ const loadData = async () => {
     if (res.code === 200 && res.data) {
       roleList.value = res.data;
     }
-  } catch {
-    roleList.value = [
-      { id: 1, roleCode: 'ROLE_ADMIN', roleName: '超级管理员', description: '系统最高统管权限，拥有全平台所有管理职能', sortOrder: 1, status: 1 },
-      { id: 2, roleCode: 'ROLE_DEV_MGR', roleName: '研发主管', description: '技术研发中心主管，审批研发团队假勤与用印', sortOrder: 2, status: 1 },
-      { id: 3, roleCode: 'ROLE_HR', roleName: '人事主管', description: '人力资源负责人，负责全员假期复核、考勤补卡核准', sortOrder: 3, status: 1 },
-      { id: 4, roleCode: 'ROLE_USER', roleName: '普通员工', description: '企业基础协同用户，发起日常表单与个人查阅', sortOrder: 4, status: 1 }
-    ];
+  } catch (err: any) {
+    if (err?.message) message.error(err.message);
   } finally {
     loading.value = false;
   }
@@ -280,23 +334,63 @@ const handleModalSubmit = async () => {
   }
 };
 
-const openPermModal = (record: RoleItem) => {
+// 打开权限配置弹窗
+const openPermModal = async (record: RoleItem) => {
   currentRole.value = record;
-  if (record.roleCode === 'ROLE_ADMIN') {
-    checkedPermKeys.value = [
-      'dashboard', 'wf:approve', 'leave:view', 'attendance:view',
-      'seal:view', 'redhead:view', 'borrow:view',
-      'sys:dept', 'sys:user', 'sys:role', 'sys:dict'
-    ];
-  } else {
-    checkedPermKeys.value = ['dashboard', 'leave:view', 'attendance:view', 'seal:view', 'redhead:view', 'borrow:view'];
-  }
   permModalVisible.value = true;
+  loadingPermTree.value = true;
+  checkedPermKeys.value = [];
+  halfCheckedPermKeys.value = [];
+
+  try {
+    // 1. 获取权限树
+    if (permTreeData.value.length === 0) {
+      const treeRes = await getPermissionTreeApi();
+      if (treeRes.code === 200 && treeRes.data) {
+        permTreeData.value = treeRes.data;
+      }
+    }
+    // 默认展开所有一级和二级目录
+    expandedPermKeys.value = getAllNodeIds(permTreeData.value);
+
+    // 2. 获取该角色当前已分配的权限列表
+    if (record.id) {
+      const rolePermRes = await getRolePermissionIdsApi(record.id);
+      if (rolePermRes.code === 200 && rolePermRes.data) {
+        checkedPermKeys.value = rolePermRes.data;
+      }
+    }
+  } catch (err: any) {
+    message.error(err?.message || '获取权限数据失败');
+  } finally {
+    loadingPermTree.value = false;
+  }
 };
 
-const handleSavePerms = () => {
-  message.success(`角色 [${currentRole.value?.roleName}] 权限策略更新成功`);
-  permModalVisible.value = false;
+// 保存角色权限分配
+const handleSavePerms = async () => {
+  if (!currentRole.value?.id) return;
+  try {
+    savingPerms.value = true;
+    // 联合 checked 与 halfChecked 保证上级目录访问权
+    const allIds = Array.from(new Set([
+      ...checkedPermKeys.value,
+      ...halfCheckedPermKeys.value
+    ]));
+
+    const res = await assignRolePermissionsApi({
+      roleId: currentRole.value.id,
+      permissionIds: allIds
+    });
+    if (res.code === 200) {
+      message.success(`角色 [${currentRole.value.roleName}] 权限分配已成功保存并实时生效`);
+      permModalVisible.value = false;
+    }
+  } catch (err: any) {
+    if (err?.message) message.error(err.message);
+  } finally {
+    savingPerms.value = false;
+  }
 };
 
 const handleDelete = async (roleId?: number) => {
@@ -336,5 +430,52 @@ onMounted(() => {
   color: #1f1f1f;
   display: flex;
   align-items: center;
+}
+
+.perm-tree-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 6px;
+}
+
+.perm-count-badge {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.perm-count-badge b {
+  color: #1677ff;
+}
+
+.perm-tree-container {
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+}
+
+.perm-tree-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.perm-node-name {
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.perm-node-code {
+  font-size: 11px;
+  color: #94a3b8;
+  background: #f1f5f9;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: monospace;
 }
 </style>

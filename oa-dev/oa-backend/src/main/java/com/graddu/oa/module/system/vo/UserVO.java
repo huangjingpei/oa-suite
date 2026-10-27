@@ -45,4 +45,6 @@ public class UserVO implements Serializable {
     private List<Long> roleIds;
 
     private List<String> roleNames;
+
+    private List<String> permissions;
 }

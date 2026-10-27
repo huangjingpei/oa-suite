@@ -13,6 +13,7 @@ export interface LoginVO {
   deptId?: number;
   deptName?: string;
   roles: string[];
+  permissions?: string[];
 }
 
 export interface UserVO {
@@ -31,6 +32,7 @@ export interface UserVO {
   createTime?: string;
   roleIds?: number[];
   roleNames?: string[];
+  permissions?: string[];
 }
 
 export interface DeptNode {

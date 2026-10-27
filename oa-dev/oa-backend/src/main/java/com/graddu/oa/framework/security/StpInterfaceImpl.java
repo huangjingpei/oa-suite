@@ -8,6 +8,7 @@ import com.graddu.oa.module.system.entity.SysUserRole;
 import com.graddu.oa.module.system.mapper.SysRoleMapper;
 import com.graddu.oa.module.system.mapper.SysUserMapper;
 import com.graddu.oa.module.system.mapper.SysUserRoleMapper;
+import com.graddu.oa.module.system.service.SysPermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +27,14 @@ public class StpInterfaceImpl implements StpInterface {
     private final SysUserMapper userMapper;
     private final SysUserRoleMapper userRoleMapper;
     private final SysRoleMapper roleMapper;
+    private final SysPermissionService permissionService;
 
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        // 当前支持基于角色的权限判定，预留具体权限代码
-        return Collections.emptyList();
+        if (loginId == null) {
+            return Collections.emptyList();
+        }
+        return permissionService.getPermsByUsername(loginId.toString());
     }
 
     @Override

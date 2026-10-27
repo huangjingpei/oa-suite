@@ -58,6 +58,87 @@ INSERT INTO `oa_sys_user_role` (`id`, `user_id`, `role_id`) VALUES
 (4007, 3006, 2005); -- lisi -> 员工
 
 -- ------------------------------------------------------------------------------
+-- 4.1 系统权限与菜单初始数据
+-- ------------------------------------------------------------------------------
+DELETE FROM `oa_sys_permission`;
+INSERT INTO `oa_sys_permission` (`id`, `parent_id`, `name`, `perms`, `menu_type`, `icon`, `sort_order`, `status`, `create_by`) VALUES
+-- 1. 工作台审批中枢
+(1000, 0, '工作台审批中枢', 'wf', 1, 'DashboardOutlined', 1, 1, 'system'),
+(1010, 1000, '待办任务审批', 'wf:pending:view', 2, 'ClockCircleOutlined', 1, 1, 'system'),
+(1011, 1010, '审批通过', 'wf:task:approve', 3, NULL, 1, 1, 'system'),
+(1012, 1010, '审批驳回', 'wf:task:reject', 3, NULL, 2, 1, 'system'),
+(1013, 1010, '审批加签', 'wf:task:sign', 3, NULL, 3, 1, 'system'),
+(1020, 1000, '已办流转追踪', 'wf:handled:view', 2, 'CheckCircleOutlined', 2, 1, 'system'),
+(1030, 1000, '我发起的单据', 'wf:mine:view', 2, 'SendOutlined', 3, 1, 'system'),
+(1031, 1030, '撤回单据', 'wf:task:cancel', 3, NULL, 1, 1, 'system'),
+
+-- 2. 人事考勤中心
+(2000, 0, '人事考勤中心', 'hr', 1, 'TeamOutlined', 2, 1, 'system'),
+(2010, 2000, '员工请假台账', 'hr:leave:view', 2, 'CalendarOutlined', 1, 1, 'system'),
+(2011, 2010, '提交请假申请', 'hr:leave:apply', 3, NULL, 1, 1, 'system'),
+(2012, 2010, '请假排版打印', 'hr:leave:print', 3, NULL, 2, 1, 'system'),
+(2020, 2000, '考勤打卡记录', 'hr:attendance:view', 2, 'FieldTimeOutlined', 2, 1, 'system'),
+(2021, 2020, '在线打卡', 'hr:attendance:clock', 3, NULL, 1, 1, 'system'),
+(2022, 2020, '发起漏卡补卡', 'hr:attendance:repair', 3, NULL, 2, 1, 'system'),
+
+-- 3. 行政综合中心
+(3000, 0, '行政综合中心', 'adm', 1, 'BankOutlined', 3, 1, 'system'),
+(3010, 3000, '企业用印审批', 'adm:seal:view', 2, 'SafetyCertificateOutlined', 1, 1, 'system'),
+(3011, 3010, '发起用印申请', 'adm:seal:apply', 3, NULL, 1, 1, 'system'),
+(3012, 3010, '用印单据打印', 'adm:seal:print', 3, NULL, 2, 1, 'system'),
+(3020, 3000, '红头公文拟发', 'adm:redhead:view', 2, 'FileTextOutlined', 2, 1, 'system'),
+(3021, 3020, '公文起草拟发', 'adm:redhead:draft', 3, NULL, 1, 1, 'system'),
+(3022, 3020, '红头公文套打', 'adm:redhead:print', 3, NULL, 2, 1, 'system'),
+(3030, 3000, '档案资料借阅', 'adm:borrow:view', 2, 'FolderOpenOutlined', 3, 1, 'system'),
+(3031, 3030, '发起借阅申请', 'adm:borrow:apply', 3, NULL, 1, 1, 'system'),
+(3032, 3030, '确认归还核销', 'adm:borrow:return', 3, NULL, 2, 1, 'system'),
+
+-- 4. 系统组织管理
+(4000, 0, '系统组织管理', 'sys', 1, 'SettingOutlined', 4, 1, 'system'),
+(4010, 4000, '部门架构管理', 'sys:dept:view', 2, 'ApartmentOutlined', 1, 1, 'system'),
+(4011, 4010, '新增部门', 'sys:dept:add', 3, NULL, 1, 1, 'system'),
+(4012, 4010, '修改部门', 'sys:dept:edit', 3, NULL, 2, 1, 'system'),
+(4013, 4010, '删除部门', 'sys:dept:delete', 3, NULL, 3, 1, 'system'),
+(4020, 4000, '员工用户管理', 'sys:user:view', 2, 'UserOutlined', 2, 1, 'system'),
+(4021, 4020, '新建员工', 'sys:user:add', 3, NULL, 1, 1, 'system'),
+(4022, 4020, '编辑员工', 'sys:user:edit', 3, NULL, 2, 1, 'system'),
+(4023, 4020, '启停员工', 'sys:user:status', 3, NULL, 3, 1, 'system'),
+(4024, 4020, '重置密码', 'sys:user:reset', 3, NULL, 4, 1, 'system'),
+(4025, 4020, '注销员工', 'sys:user:delete', 3, NULL, 5, 1, 'system'),
+(4030, 4000, '角色权限体系', 'sys:role:view', 2, 'IdcardOutlined', 3, 1, 'system'),
+(4031, 4030, '新增角色', 'sys:role:add', 3, NULL, 1, 1, 'system'),
+(4032, 4030, '编辑角色', 'sys:role:edit', 3, NULL, 2, 1, 'system'),
+(4033, 4030, '分配权限', 'sys:role:auth', 3, NULL, 3, 1, 'system'),
+(4034, 4030, '删除角色', 'sys:role:delete', 3, NULL, 4, 1, 'system'),
+(4040, 4000, '系统数据字典', 'sys:dict:view', 2, 'BookOutlined', 4, 1, 'system'),
+(4041, 4040, '维护字典', 'sys:dict:save', 3, NULL, 1, 1, 'system'),
+(4042, 4040, '删除字典', 'sys:dict:delete', 3, NULL, 2, 1, 'system');
+
+-- ------------------------------------------------------------------------------
+-- 4.2 角色与权限关联初始数据
+-- ------------------------------------------------------------------------------
+DELETE FROM `oa_sys_role_permission`;
+-- 给超级管理员 (2001) 赋予全量权限
+INSERT INTO `oa_sys_role_permission` (`role_id`, `permission_id`)
+SELECT 2001, id FROM `oa_sys_permission`;
+
+-- 给人事主管 (2002) 赋予工作台与人事中心权限
+INSERT INTO `oa_sys_role_permission` (`role_id`, `permission_id`) VALUES
+(2002, 1000), (2002, 1010), (2002, 1011), (2002, 1012), (2002, 1013), (2002, 1020), (2002, 1030), (2002, 1031),
+(2002, 2000), (2002, 2010), (2002, 2011), (2002, 2012), (2002, 2020), (2002, 2021), (2002, 2022);
+
+-- 给行政专员 (2003) 赋予工作台与行政中心权限
+INSERT INTO `oa_sys_role_permission` (`role_id`, `permission_id`) VALUES
+(2003, 1000), (2003, 1010), (2003, 1011), (2003, 1012), (2003, 1013), (2003, 1020), (2003, 1030), (2003, 1031),
+(2003, 3000), (2003, 3010), (2003, 3011), (2003, 3012), (2003, 3020), (2003, 3021), (2003, 3022), (2003, 3030), (2003, 3031), (2003, 3032);
+
+-- 给普通员工 (2005) 赋予日常填报与发起权限
+INSERT INTO `oa_sys_role_permission` (`role_id`, `permission_id`) VALUES
+(2005, 1000), (2005, 1020), (2005, 1030), (2005, 1031),
+(2005, 2000), (2005, 2010), (2005, 2011), (2005, 2020), (2005, 2021), (2005, 2022),
+(2005, 3000), (2005, 3010), (2005, 3011), (2005, 3020), (2005, 3030), (2005, 3031);
+
+-- ------------------------------------------------------------------------------
 -- 5. 数据字典初始数据 (字典类型 + 字典键值)
 -- ------------------------------------------------------------------------------
 DELETE FROM `oa_sys_dict_type`;

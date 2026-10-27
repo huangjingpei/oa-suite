@@ -72,6 +72,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
 
         List<String> roles = stpInterface.getRoleList(user.getUsername(), StpUtil.getLoginType());
+        List<String> permissions = stpInterface.getPermissionList(user.getUsername(), StpUtil.getLoginType());
 
         return LoginVO.builder()
                 .token(tokenValue)
@@ -83,6 +84,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 .deptId(user.getDeptId())
                 .deptName(deptName)
                 .roles(roles)
+                .permissions(permissions)
                 .build();
     }
 
@@ -103,6 +105,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             }
         }
         fillUserRoles(vo, user.getId());
+        vo.setPermissions(stpInterface.getPermissionList(user.getUsername(), StpUtil.getLoginType()));
         return vo;
     }
 

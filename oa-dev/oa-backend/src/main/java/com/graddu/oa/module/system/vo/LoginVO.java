@@ -47,4 +47,7 @@ public class LoginVO implements Serializable {
 
     @Schema(description = "用户拥有角色代码列表")
     private List<String> roles;
+
+    @Schema(description = "用户拥有操作权限标识列表")
+    private List<String> permissions;
 }

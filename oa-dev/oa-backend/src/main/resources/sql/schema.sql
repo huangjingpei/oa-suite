@@ -92,6 +92,39 @@ CREATE TABLE `oa_sys_user_role` (
   KEY `idx_role_id` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户与角色关联表';
 
+-- 1.5 系统菜单与操作权限表
+DROP TABLE IF EXISTS `oa_sys_permission`;
+CREATE TABLE `oa_sys_permission` (
+  `id` BIGINT UNSIGNED NOT NULL COMMENT '权限ID',
+  `parent_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '父权限ID (0为根目录)',
+  `name` VARCHAR(64) NOT NULL COMMENT '权限/菜单名称',
+  `perms` VARCHAR(100) DEFAULT NULL COMMENT '权限标识编码 (如 hr:leave:apply, sys:user:add)',
+  `menu_type` TINYINT NOT NULL DEFAULT 1 COMMENT '类型 (1:目录, 2:菜单, 3:按钮操作)',
+  `icon` VARCHAR(64) DEFAULT NULL COMMENT '图标样式',
+  `sort_order` INT NOT NULL DEFAULT 0 COMMENT '显示排序',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 (1正常, 0停用)',
+  `create_by` VARCHAR(64) DEFAULT NULL COMMENT '创建人',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` VARCHAR(64) DEFAULT NULL COMMENT '修改人',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `is_deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除 (0正常, 1已删除)',
+  PRIMARY KEY (`id`),
+  KEY `idx_parent_id` (`parent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统菜单与操作权限表';
+
+-- 1.6 角色与权限关联表
+DROP TABLE IF EXISTS `oa_sys_role_permission`;
+CREATE TABLE `oa_sys_role_permission` (
+  `id` BIGINT UNSIGNED NOT NULL COMMENT '主键ID',
+  `role_id` BIGINT UNSIGNED NOT NULL COMMENT '角色ID',
+  `permission_id` BIGINT UNSIGNED NOT NULL COMMENT '权限ID',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_role_permission` (`role_id`, `permission_id`),
+  KEY `idx_role_id` (`role_id`),
+  KEY `idx_permission_id` (`permission_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色与权限关联表';
+
 -- 1.5 字典类型表
 DROP TABLE IF EXISTS `oa_sys_dict_type`;
 CREATE TABLE `oa_sys_dict_type` (
