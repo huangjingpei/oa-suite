@@ -27,9 +27,6 @@
                 </a-radio-button>
               </a-radio-group>
             </div>
-            <a-button size="large" @click="onboardingVisible = true" style="border-color: #1677ff; color: #1677ff">
-              <GiftOutlined /> 新人入职向导
-            </a-button>
             <a-button type="primary" size="large" @click="handleQuickClock">
               <CheckCircleOutlined /> 快速打卡
             </a-button>
@@ -644,9 +641,6 @@
     <SealModal v-model:open="sealModalOpen" @success="handleFormSuccess" />
     <RedheadModal v-model:open="redheadModalOpen" @success="handleFormSuccess" />
     <BorrowModal v-model:open="borrowModalOpen" @success="handleFormSuccess" />
-
-    <!-- 新员工入职欢迎向导弹窗 (完全独立挂载，不影响现有布局) -->
-    <OnboardingModal v-model:open="onboardingVisible" />
   </div>
 </template>
 
@@ -675,8 +669,7 @@ import {
   SafetyCertificateOutlined,
   RobotOutlined,
   LockOutlined,
-  NotificationOutlined,
-  GiftOutlined
+  NotificationOutlined
 } from '@ant-design/icons-vue';
 import {
   getPendingTasksApi,
@@ -696,7 +689,6 @@ import EgressModal from '@/views/business/attendance/components/EgressModal.vue'
 import SealModal from '@/views/business/seal/components/SealModal.vue';
 import RedheadModal from '@/views/business/redhead/components/RedheadModal.vue';
 import BorrowModal from '@/views/business/borrow/components/BorrowModal.vue';
-import OnboardingModal from '@/components/welcome/OnboardingModal.vue';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -717,9 +709,6 @@ const egressModalOpen = ref(false);
 const sealModalOpen = ref(false);
 const redheadModalOpen = ref(false);
 const borrowModalOpen = ref(false);
-
-// 新员工入职欢迎向导弹窗状态
-const onboardingVisible = ref(false);
 
 const handleFormSuccess = () => {
   loadPendingTasks();
@@ -901,12 +890,6 @@ onMounted(() => {
   loadHandledTasks();
   loadMySubmitted();
   loadNotices();
-
-  // 新员工入职向导自启检测：若该员工尚未阅读过向导则自动弹出
-  const uname = userStore.userInfo?.username;
-  if (uname && localStorage.getItem(`qihang_onboarding_shown_${uname}`) !== '1') {
-    onboardingVisible.value = true;
-  }
 });
 </script>
 
